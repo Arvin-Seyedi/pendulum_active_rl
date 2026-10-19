@@ -1,0 +1,6 @@
+# requirements.txt
+
+gymnasium[classic-control]
+numpy
+matplotlib
+torch
