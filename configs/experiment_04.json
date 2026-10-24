@@ -1,0 +1,201 @@
+{
+  "description": "Archived Experiment 04 protocol and execution environment. Documents source-defined settings; not a runtime override.",
+  "protocol": {
+    "experiment": "04_active_expert_acquisition",
+    "phase": "full_study",
+    "pilot_seed": 41,
+    "full_study_seeds": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "pilot_excluded_from_full_study": true,
+    "performance_tuning_allowed": false,
+    "environment": "Pendulum-v1",
+    "horizon": 200,
+    "candidate_count": 10000,
+    "candidate_low": [
+      -0.8,
+      -2.0
+    ],
+    "candidate_high": [
+      0.8,
+      2.0
+    ],
+    "strategies": [
+      "uncertainty",
+      "distance",
+      "random"
+    ],
+    "budgets": [
+      2000,
+      5000,
+      10000
+    ],
+    "ranking": "Frozen D0 selector; descending bounded std or exact nearest-D0 distance; independent tie/random streams; no future safety filtering",
+    "distance": "Euclidean [theta/1,omega/3], nearest among all 20000 D0 pre-action states",
+    "collection": "First negative raw next-state margin stops episode; crossing transition counts; next candidate in frozen rank; complete stream prefixes",
+    "collection_failure": "Fatal, preserve partial log; no easier replacement or silent exclusion",
+    "budget_cutoff": "Not an MDP terminal; separate flag; whole prefix episode remains eligible for bootstrap",
+    "training": {
+      "members": 5,
+      "hidden_sizes": [
+        64,
+        64
+      ],
+      "batch_size": 256,
+      "learning_rate": 0.001,
+      "max_epochs": 300,
+      "patience": 30,
+      "seed": 42
+    },
+    "training_seeds": "Independent selector/retraining streams; identical retraining member streams across strategies and budgets",
+    "bootstrap": "N draws of whole episodes with replacement; ragged flatten; transition-mean MSE; whole-episode OOB",
+    "deployment": "Mean of five individually clipped member torques; population std; preserve raw outputs",
+    "safety": "Shared safety_margin on raw env.unwrapped.state, including all 201 visited states; no plotting clips or angle wrapping for safety",
+    "policy_state": "Shared get_state(observation), canonical angle; same convention as D0/03",
+    "evaluation": {
+      "wide_episodes": 1000,
+      "nominal_episodes": 200,
+      "audit_states": 10000,
+      "seeds": {
+        "wide": 404001,
+        "nominal": 404002,
+        "audit": 404003,
+        "resets": 404004
+      },
+      "continue_after_safety_violation": true,
+      "nominal_low": [
+        -0.25,
+        -0.5
+      ],
+      "nominal_high": [
+        0.25,
+        0.5
+      ]
+    },
+    "primary_comparison": {
+      "budget": 5000,
+      "contrast": "uncertainty minus random",
+      "separate_outcomes": [
+        "wide.mean_return",
+        "wide.safety_violation_rate"
+      ]
+    },
+    "additional_outcomes": [
+      "distance strategy",
+      "audit imitation MAE/RMSE by saturation",
+      "worst return",
+      "worst 10% mean return",
+      "minimum raw safety margin",
+      "nominal retention",
+      "new-transition D0 distance distribution"
+    ],
+    "full_study_summary": "Paired seed differences, mean/sample-SD/min/max and 10000 seed-bootstrap 95% intervals; no pilot inferential claims",
+    "coverage": "Save exact nearest-D0 distance for every new s_t and s_(t+1), plus per-budget distributions and initial-state distances separately",
+    "leakage_control": "Selection sees D0 and pool only; training sees selected prefixes only; evaluation ICs and labels never passed to either",
+    "master_seeds": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "training_default_seed_is_overridden": "Actual master-derived selector/retraining seeds and member streams are saved per seed.",
+    "inference": {
+      "unit": "master seed, paired across methods",
+      "n_seeds": 10,
+      "bootstrap_seed": 404010,
+      "bootstrap_repeats": 10000,
+      "interval": "2.5/97.5 percentiles of bootstrapped paired mean differences",
+      "standard_deviation": "sample SD, ddof=1, of per-seed differences",
+      "conditioning": "Fixed shared evaluation ICs; intervals describe training/acquisition seed variation, not test-population uncertainty",
+      "multiplicity": "Separate marginal intervals for two primary outcomes; secondary analyses descriptive, no familywise adjustment"
+    },
+    "diagnostic_only_additions": {
+      "support_distance_thresholds": [
+        0.001,
+        0.01,
+        0.05
+      ],
+      "normalized_equilibrium_radii": [
+        0.01,
+        0.05,
+        0.1
+      ],
+      "normalized_bin_widths": [
+        0.05,
+        0.1
+      ],
+      "bin_origin": [
+        0,
+        0
+      ],
+      "trajectory_phases": "first 20 vs remaining observed transitions",
+      "tail": "Largest ceil(5%*N) distances, tail mean and share of total distance",
+      "settling": "First observed suffix entirely within radius .05; no inference about censored continuation",
+      "weighting": "Report both transition-weighted and equally weighted trajectory diagnostics",
+      "bin_interpretation": "Resolution-dependent occupancy, not continuous covered volume"
+    },
+    "replay_policy": "Pilot established deterministic equivalence. Full study does not repeat acquisition; physical executed expert collection steps equal maximum budget per strategy.",
+    "PD_reference": "One shared deterministic evaluation on identical fixed held-out ICs, reused across seeds."
+  },
+  "execution": {
+    "versions": {
+      "python": "3.13.2",
+      "numpy": "2.3.2",
+      "torch": "2.10.0",
+      "gymnasium": "1.2.3",
+      "matplotlib": "3.10.5",
+      "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O"
+    },
+    "workers": 3,
+    "multiprocessing": "spawn; each worker uses deterministic single-thread CPU PyTorch",
+    "device": "cpu",
+    "torch_threads_per_worker": 1,
+    "deterministic_algorithms": true
+  },
+  "provenance": {
+    "git_head_during_study": "e037a25b89c80aa1d7b80703a6fdb2c36c9a863f",
+    "experiment_04_sources_were_uncommitted_during_study": true,
+    "D0_path": "data/pendulum_D0.npz",
+    "D0_sha256": "7ca6e83d77d2d358e2b77975da25bc4a49411b2681dba9155a206b42bd09a832",
+    "source_sha256": {
+      "experiments/01_expert_map.py": "96c1381e37b9a051d6bcc1f424dd3e7617e0034633f46c0b2ba01ad05e0e4097",
+      "experiments/02_generate_D0.py": "f4fc4ccb1dcfd013e85f8602fd91ad458b7a2251934406794d671b7ab4460f1c",
+      "experiments/03_robustness_analysis.py": "93ef44699fdb8fdcd88faedeec38b2d56e6c15dab561f8ff0e79fea0d6cfeae1",
+      "experiments/03_uncertainty_map.py": "9bcf707c13c79fb326e04c90061771d60800155ccdbcc9610bfbd43d36decc8e",
+      "experiments/04_active_acquisition.py": "445f35275077b937748eb48937b9c4f5d305d7db2ac5074bba3a3437673d61ac",
+      "experiments/04_full_study.py": "9e968e1dff2377e47067a96381fe38e81177f39a0bbfef8de6ec55af251cbf25",
+      "src/acquisition_analysis.py": "dde4580f5fcdca184fe34b5406a7d2f58fc393b2d4ca178b4f962486c0da6412",
+      "src/active_query.py": "0164f3cd6f92371f60cb25070cde735858302796ecb8ecf23135b77c49f6cc57",
+      "src/dataset.py": "5f5b0ffefa7924f3434576cb7de54be222d5aec1fd39c131aa341d9a64ae7543",
+      "src/ensemble.py": "2c7d867923c7d791338062d8d622dcf980e6c80a8dce4b5cc59ab8c762cabf99",
+      "src/expert.py": "d701b23125dcf96c50d77de7ffb60f22829dc5715462818250c32db194ba9532",
+      "src/policy_evaluation.py": "515c0fba62618f8b3c70fe122a2e610c343c55fc251c010cd23b31f385daee85",
+      "src/ragged_ensemble.py": "19f43b7fb1342a219e4b40b651a36d095464d25a9ef3de94d0e196fbaa648d58",
+      "src/safety.py": "14e47ea078cef9027d76cf50c19186b8b68b790070ad45fff6e9ca22aecb8348",
+      "tests/test_acquisition_analysis.py": "d23f5d03b9a7809b4de3653e1e7757bf7be1ab61a2d3669af3b8b18572afba71",
+      "tests/test_active_acquisition.py": "fe458378e1a3d2a0f948c052db3811792a943cc5b5036f6d1a5998932dfac79d"
+    },
+    "original_artifact_sha256": {
+      "protocol.json": "320512835db0efeba7127adf88c3b32903b8cbd06217f4e2af8af29e19cccb91",
+      "metadata.json": "9e3821ca19f2dfce596cbe87ca232d4207f6fed3c1ea8675c9ec5ad4f978f796",
+      "summary.json": "dbac72135b8274d958837a9813cd4f4ba60d906429302bac3ff655c0f35f918a",
+      "completion_checks.json": "e8695a3bdec52055d27d70eb64fea5eb02827f02219664325ae1924b6a6af061",
+      "review_2026_10_24/verification.json": "ff9b9f14c2c47a532c27f2d80399431301491439e467f4b4072512cd142afb6f"
+    }
+  }
+}
