@@ -1,0 +1,16 @@
+{
+  "phase": "approved_full_study",
+  "authorization": "User approved seeds 52–61 after seed-41 final verification on 2026-10-25.",
+  "approved_pilot_protocol": "configs/experiment_05.json",
+  "approved_pilot_protocol_sha256": "38647208cd96e20764e23c53ba933a7a58c83e66a6aafc5ef0e8bee05c7cf633",
+  "master_seeds": [52, 53, 54, 55, 56, 57, 58, 59, 60, 61],
+  "pilot_is_historical_and_excluded": true,
+  "methodology_changes": [],
+  "execution": {
+    "default_workers": 3,
+    "resume": "Validate immutable source, protocol, environment, data and completed artifact hashes; skip completed seeds. Atomic checkpoint publication; resume only unfinished work.",
+    "verification": "Pilot replay results remain preserved. Each full-study seed verifies frozen ranks, nested budgets, shared physical prefixes, every checkpoint, raw evaluation margins, loaded-policy imitation predictions and isolated audit prefixes. No additional training or simulator replays are required in the full study.",
+    "PD_reference": "Evaluate once on common full-study held-out states and reuse across seeds.",
+    "failure_policy": "Retain all artifacts and fail the study; never drop or replace a seed. Process interruption can resume unfinished work. Scientific collection failures require investigation."
+  }
+}

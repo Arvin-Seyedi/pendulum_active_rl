@@ -1,0 +1,84 @@
+{
+  "experiment": "05_reducing_redundant_expert_collection",
+  "pilot_seed": 41,
+  "full_study_seeds": [52, 53, 54, 55, 56, 57, 58, 59, 60, 61],
+  "full_study_authorized_to_launch": false,
+  "pilot_excluded_from_inference": true,
+  "performance_tuning_allowed": false,
+  "environment": "Pendulum-v1",
+  "D0": {
+    "path": "data/pendulum_D0.npz",
+    "sha256": "7ca6e83d77d2d358e2b77975da25bc4a49411b2681dba9155a206b42bd09a832",
+    "trajectories": 100,
+    "transitions": 20000
+  },
+  "candidate_count": 10000,
+  "candidate_low": [-0.8, -2.0],
+  "candidate_high": [0.8, 2.0],
+  "strategies": ["uncertainty", "random", "distance"],
+  "collection_horizons": [20, 200],
+  "budgets": [2000, 5000, 10000],
+  "expert": "Unchanged pd_controller: clip(-8*theta - 2*omega, -2, 2)",
+  "selection": "Single D0 selector and frozen rankings shared across horizons. Bounded population standard deviation, exact nearest-D0 distance, or uniform random permutation; independent fixed tie stream. No future safety labels.",
+  "distance": "Euclidean [theta/1, omega/3], exact nearest among all 20000 D0 pre-action states",
+  "collection": "First negative raw successor margin stops rollout; crossing transition counts. Otherwise cap at H or exact remaining budget. Next initial condition follows the frozen ranking without replacement.",
+  "horizon_flags": "Gym TimeLimit uses H for collection: truncated marks the collection cap, never an absorbing MDP terminal. Safety and budget stops have separate flags; evaluation always uses 200.",
+  "failure_policy": "Abort on nonfinite data, simulator failure, pool exhaustion, or failed checks; preserve partial artifacts, never substitute candidates or exclude a seed.",
+  "training": {
+    "members": 5,
+    "hidden_sizes": [64, 64],
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "max_epochs": 300,
+    "patience": 30
+  },
+  "bootstrap": "Unchanged N whole-episode draws with replacement; D0 episode boundaries unchanged; ragged episodes retained; transition-mean normalized raw-action MSE; whole-episode OOB checkpoint selection.",
+  "pairing": "Master-derived pool, selector, retraining, ties, random, and environment streams. Shared initialization/bootstrap/shuffle seeds across conditions; unequal episode counts imply different sampled episode IDs. Candidate-specific environment seeds shared across horizons.",
+  "deployment": "Mean of five individually clipped member torques; retain raw member outputs, raw mean, bounded/raw disagreement, and saturation strata.",
+  "evaluation": {
+    "horizon": 200,
+    "wide_episodes": 1000,
+    "nominal_episodes": 200,
+    "audit_states": 10000,
+    "nominal_low": [-0.25, -0.5],
+    "nominal_high": [0.25, 0.5],
+    "pilot_seeds": {"wide": 505101, "nominal": 505102, "audit": 505103, "resets": 505104},
+    "full_study_seeds": {"wide": 505001, "nominal": 505002, "audit": 505003, "resets": 505004},
+    "continue_after_violation": true,
+    "safety": "All 201 raw unwrapped visited states, including terminal successor: min(1-abs(theta), 1-abs(omega)/3); no angle wrapping or plotting clips. Policy inputs retain canonical D0 observation convention."
+  },
+  "primary": {
+    "budget": 5000,
+    "contrast": "uncertainty_H20 minus uncertainty_H200",
+    "separate_outcomes": ["wide.mean_return", "wide.safety_violation_rate"]
+  },
+  "secondary": ["U20-R20", "R20-R200", "D20-D200", "U20-D20", "(U20-U200)-(R20-R200)", "all conditions versus D0", "other budgets", "imitation error and worst-case metrics"],
+  "inference": {
+    "unit": "paired master seed",
+    "bootstrap_repeats": 10000,
+    "bootstrap_seed": 505010,
+    "interval": "Marginal 95% percentile seed-bootstrap intervals; sample SD ddof=1; ranges and all paired seed values; secondary comparisons descriptive.",
+    "pilot_confidence_intervals": false
+  },
+  "coverage": {
+    "support_thresholds": [0.001, 0.01, 0.05],
+    "equilibrium_radii": [0.01, 0.05, 0.1],
+    "bin_widths": [0.05, 0.1],
+    "bin_origin": [0, 0],
+    "phases": "First 20 vs later observed transitions. No imputation after horizon or safety stopping.",
+    "weighting": "Both transition-weighted and equal-trajectory summaries, per-trajectory and per-step counts, distance distributions, tails, and new occupied bins."
+  },
+  "selection_diagnostics": "Per queried initial condition: bounded/raw disagreement, support distance, all strategy ranks (1-based), score distribution, cutoff, fraction with exactly zero bounded disagreement, positive-score pool exhaustion, and query order. Random has no numerical acquisition score.",
+  "safety_audit": {
+    "budget_for_selected_initial_conditions": 5000,
+    "horizon": 200,
+    "scope": "Union of selected initial conditions across all six conditions; audit each unique candidate once through first raw crossing or step 200, after all acquisition/training/evaluation are frozen.",
+    "late_violation_denominator": "H20 trajectories safely stopped at exactly the horizon; exclude safety stops and partial budget cutoffs.",
+    "late_violation_numerator": "Those safely capped trajectories whose first expert violation occurs at steps 21 through 200 inclusive.",
+    "isolation": "Separate files and costs; no audit labels or continuation transitions enter selection, training, or checkpoint selection. Hash frozen datasets and checkpoints before and after."
+  },
+  "reset_cost_transition_equivalents": [0, 20, 200],
+  "cost_accounting": "Record simulator reset/step times and attempts, collection elapsed time, and C_lambda=B+lambda*resets. Separate acquisition, technical replays, policy evaluation, and post-selection expert-audit costs. Equal transition budgets are not equal operating costs.",
+  "pilot_checks": "All exact prefixes independently replayed; shared-candidate physical prefixes match; every checkpoint reloads; H200 matches accepted seed-41 data and models; full-configuration first-member replay in all six primary-budget arms; repeated primary evaluation and isolated expert audit; all existing tracked sources and prior results unchanged.",
+  "execution": {"device": "cpu", "torch_threads": 1, "deterministic_algorithms": true}
+}
