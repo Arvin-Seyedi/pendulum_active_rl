@@ -1,0 +1,14 @@
+{
+  "authorized_phase": "full_57_state_study",
+  "scientific_config": "configs/experiment_07.json",
+  "accepted_pilot": "results/recoverability/pilot",
+  "output": "results/recoverability/full_study",
+  "state_manifest": "Reuse the exact accepted pilot all_57_cases manifest",
+  "reuse_completed_pilot_cases": true,
+  "optimization_starts_per_state": 3,
+  "new_solver_repeats": false,
+  "reproducibility_reference": "Preserved twelve paired pilot solves; independent recorded-action replay for every full-study candidate",
+  "process_workers": 1,
+  "methodology_changes": false,
+  "training_data_use": false
+}
