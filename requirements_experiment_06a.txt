@@ -1,0 +1,6 @@
+# Tested with CPython 3.13.2 on macOS; no Experiment 06 IQL dependencies.
+gymnasium[classic-control]==1.2.3
+numpy==2.3.2
+matplotlib==3.10.5
+torch==2.10.0
+pygame==2.6.1
