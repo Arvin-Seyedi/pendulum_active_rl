@@ -189,9 +189,10 @@ Behavior cloning asks:
 Offline RL asks:
 > Among supported state-action trajectories in the dataset, which actions lead to better long-term outcomes?
 
-Planned literature direction:
-- IQL first
-- then CQL / TD3+BC / offline constrained RL as relevant
+Historical literature direction was IQL first, followed by CQL / TD3+BC / offline
+constrained RL as relevant. Experiment 06 subsequently tested IQL only in a
+technical pilot and diagnostics; it remains unfinished. No successor algorithm
+or full study is authorized by this context document.
 
 Important limitation:
 - if the expert dataset is nearly deterministic and concentrated around nominal operation, the learner may have insufficient action diversity/support to improve beyond the expert
@@ -226,7 +227,8 @@ Important:
 - residual stage still uses environment interaction
 - therefore not the same as the advisor's offline-only direction
 
-The next offline-RL paper planned for study is IQL.
+IQL was subsequently studied in Experiment 06; see the current evidence below.
+The literature notes above remain background, not an approved implementation plan.
 
 ## 7. Active expert-query idea
 
@@ -360,70 +362,95 @@ Interpretation:
 - it does not cover critical regions
 - this is the desired setup for testing active targeted data acquisition
 
-## 11. Next Pendulum experiment
+## 11. Evidence through Experiment 08
 
-Next planned research step:
+Experiments 01–05, 06A, 07, and 08 are complete and scientifically reviewed.
+Experiment 06/IQL is unfinished. The chronological questions, evidence, decisions,
+and commit/report references are in [docs/RESEARCH_DECISION_LOG.md](docs/RESEARCH_DECISION_LOG.md).
+[CURRENT_STATUS.md](CURRENT_STATUS.md) is the immediate handoff; this section
+replaces the former plan to implement D0 and ensemble uncertainty.
 
-> Train an ensemble of policies on D0 and produce an uncertainty map over the `(theta, omega)` state space.
+- Experiment 03 validated disagreement as an imitation-error diagnostic, with
+  zero-tie, saturation and seed analyses. Error detection did not demonstrate
+  better data acquisition or controller improvement.
+- Experiment 04 found no reliable uncertainty-versus-random primary benefit at
+  5,000 transitions: mean-return difference +15.644, 95% CI [−42.176, 59.125];
+  violation-rate difference −0.200 percentage points [−0.550, 0.000]. Distance
+  acquisition improved returns with safety tradeoffs. Uncertainty collection
+  produced 90.77% near-equilibrium transitions.
+- Experiment 05 reduced uncertainty collection redundancy from 89.56% at H200
+  to 14.33% at H20, at approximately ten times the reset cost. Primary return
+  difference +8.164 [−39.914, 52.714] and violation-rate difference −0.010 points
+  [−0.090, 0.060] did not establish improvement. Neither redundancy reduction nor
+  lower imitation error alone establishes better control.
+- Experiment 06's expanded-data IQL critic was unstable. Freezing 138 safety-stop
+  successor values prevented catastrophic divergence in a seed-41 diagnostic;
+  a separate bounded readout prevented unbounded outputs but caused extensive
+  saturation. Neither established accurate values or safe controller improvement.
+  Both remain diagnostic-only. The deterministic PD data provide state coverage
+  but no direct action alternatives at identical states; beyond-expert learning
+  requires additional evidence or assumptions. The full IQL study was not launched.
+- Experiment 06A found empirically safe one-action alternatives improving both
+  200-step return metrics at 38/96 states above 1e−6 and 21/96 above 0.01; none
+  exceeded 0.1. No alternative rescued any of 40 PD-unsafe states, and two
+  introduced violations. These are oracle menu comparisons under PD continuation,
+  not a deployable policy or formal safety guarantee.
+- Experiment 07 used three fixed direct-multiple-shooting starts per state and
+  independent Gymnasium replay. It found **0/40 safe witnesses** for the PD-unsafe
+  sample, in either open-loop or feedback-tracking execution. All 48 converged
+  non-equilibrium reference candidates failed open-loop safety; feedback tracking
+  retained safety on all 16 references. Local solver failure and execution
+  sensitivity did not establish physical unrecoverability.
+- Experiment 08 independently certified **40/40 of those exact PD-unsafe states
+  nonviable for the declared real-valued discrete model**, with zero unresolved
+  PD-unsafe cases. All crossed an angle boundary by steps 2–23, using 128-bit
+  directed-rounding intervals. There were no false nonviability certificates on
+  the 16 reference controls; equilibrium has an exact zero-torque witness.
 
-First-stage learner:
-- behavior-cloning policy ensemble
-- bootstrap resampling of D0
-- approximately 5 neural networks
-- uncertainty score from standard deviation of predicted torque
+Experiment 08 uses exact rational parameters and exact archived binary initial
+states: `omega_next = omega + (15*sin(theta)+3*u)/20`,
+`theta_next = theta + omega_next/20`, with `|u|<=2`, `|theta|<=1`, `|omega|<=3`,
+and safety at all 201 samples of a 200-step horizon. The map is monotone on the
+safe strip, and speed clipping is inactive on any step beginning in the safe set.
+An extremal safe prefix followed by a strict crossing in the certifying direction
+rules out all safe admissible sequences. An independent rational/Taylor checker
+verifies every enclosure and the crossing; no solver-failure inference or global
+viability-grid approximation is used.
 
-Questions:
-1. Is uncertainty low in the D0-covered central region?
-2. Does uncertainty increase outside D0?
-3. Does uncertainty correlate with distance from dataset support?
-4. Can uncertainty be combined with safety margin to rank query states?
-5. Does targeted expert data improve later performance/safety more efficiently than equal-budget random expert data?
+These are model certificates, separate from Gymnasium observations. No global
+implementation-rounding bound, continuous-time, uncertain-state, model-error,
+or infinite-horizon guarantee is established. The references' empirical PD
+witnesses do not become mathematical viability proofs. The selected 40-state sample
+cannot characterize the complete viable region or all PD failures. The result
+motivates distinguishing infeasible starting states from controller mistakes in
+future safe-acquisition design; no safety filter or next experiment is approved here.
 
-Fair comparison later:
-`D0 + D_targeted` versus `D0 + D_random`
-with equal additional data budgets.
+Reports: [04](docs/experiment_04_report.md), [05](docs/experiment_05_report.md),
+[06A](docs/experiment_06a_report.md), [07](docs/experiment_07_report.md),
+[08](docs/experiment_08_report.md). IQL diagnostics remain local and uncommitted
+under `results/offline_rl/`; they are not part of the completed Experiment 08 implementation.
 
-## 12. Current repository architecture
+## 12. Current repository and reproducibility
 
-Repository:
-`pendulum_active_rl`
+The repository retains reusable source under `src/`, experiment entry points
+under `experiments/`, frozen configurations under `configs/`, tests under `tests/`,
+and concise reviewed reports under `docs/`. D0 and generated datasets, checkpoints,
+trajectories, solver logs and result archives remain outside Git.
 
-Intended structure:
+Experiment 08 adds the interval producer, independent certificate checker, pilot
+and full-study orchestration/reporting, and their tests. Its source depends on
+committed prior helpers, not unfinished IQL files. Saved certificates and simulator
+evidence are in `results/viability/pilot/` and `results/viability/full_study/`.
+The five pilot cases are preserved unchanged. Reproduction requires the archived
+Experiment 07 state artifacts or their separate reproduction; see
+[Experiment 08 reproduction](docs/experiment_08_reproduction.md).
 
-```text
-pendulum_active_rl/
-├── data/
-├── experiments/
-│   ├── 01_expert_map.py
-│   ├── 02_generate_D0.py
-│   └── 03_uncertainty_map.py
-├── results/
-├── src/
-│   ├── active_query.py
-│   ├── dataset.py
-│   ├── ensemble.py
-│   ├── expert.py
-│   └── safety.py
-├── .gitignore
-├── README.md
-└── requirements.txt
-```
-
-Implemented/verified:
-- `src/expert.py`
-- `src/safety.py`
-- `src/dataset.py`
-- `experiments/01_expert_map.py`
-
-`01_expert_map.py` reproduces:
-- `3331` safe
-- `3230` unsafe
-- `50.77%` safe
-
-Outputs are saved under:
-`results/expert_safety_map/`
-
-`02_generate_D0.py` and `03_uncertainty_map.py` are the next files to implement.
+Earlier expert-map and D0 benchmark definitions remain unchanged. Their
+observation-derived wrapped-angle/pre-action safety measurements must not be
+silently equated with later full-horizon raw-state checks. Preserve source,
+configuration and artifact hashes, exact initial-state values, negative findings,
+and unfinished diagnostics. Historical preservation manifests are immutable;
+authorized documentation updates are checked separately.
 
 ## 13. Coding workflow preferences
 

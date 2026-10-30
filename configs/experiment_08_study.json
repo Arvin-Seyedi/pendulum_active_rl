@@ -1,0 +1,16 @@
+{
+  "experiment": "08_finite_horizon_safety_viability",
+  "authorized_phase": "remaining_states_after_reviewed_five_case_pilot",
+  "scientific_config": "configs/experiment_08_pilot.json",
+  "accepted_pilot": "results/viability/pilot",
+  "source_experiment": "results/recoverability/full_study",
+  "output": "results/viability/full_study",
+  "reused_pilot_ids": [96, 2, 33, 37, 94],
+  "expected_cohort": {"PD_unsafe": 40, "PD_safe_references": 16, "equilibrium": 1},
+  "expected_new_cases": {"PD_unsafe": 38, "PD_safe_references": 14},
+  "scientific_method_changes": false,
+  "additional_methods_gate": "Only if any PD-unsafe initial state lacks an independently verified primary nonviability certificate.",
+  "global_viability_grid_if_all_40_certified": false,
+  "training_data_use": false,
+  "process_workers": 1
+}
