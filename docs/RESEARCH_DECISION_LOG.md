@@ -1,4 +1,4 @@
-# Research Decision Log — Experiments 01–08
+# Research Decision Log — Experiments 01–09
 
 This retrospective log records the evidence and decisions in experiment order.
 Commit references identify versioned milestones, not experiment execution or
@@ -222,3 +222,45 @@ not authorization to start another experiment.
   [per-state evidence](../results/viability/full_study/state_details.md),
   [verification](../results/viability/full_study/verification.json);
   Experiment 08 commit: [74f3888](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/74f3888a1ecd2a21fc7224ea00488bc272078378).
+
+## 09 — Resolve every original-grid PD failure before choosing an improvement task
+
+- **Question / previous understanding:** Experiment 08 certified nonviability
+  for a separate 40-state sample. It did not establish whether the 3,230 PD failures
+  on Experiment 01's original grid included recoverable states. Absence of an
+  optimizer witness in Experiment 07 was still distinct from a mathematical proof.
+- **Evidence:** All **3,230/3,230** archived PD-unsafe initial points received
+  independently checked real-model nonviability certificates: 1,615 upper and
+  1,615 lower angle crossings at steps 2–42 (0.10–2.10 s), all at 128 bits.
+  Minimum certified separation was 2.21447048634e−5 rad. The complete **6,561-state**
+  baseline audit checked all 201 raw states and bitwise action replay. Archived
+  labels, first-crossing times and legacy minimum margins matched exactly.
+  All 6,526 primary/reference directional records passed independent rechecking;
+  the 32 non-equilibrium reference controls had no false certificates.
+- **Search gate / negative finding:** No primary model cases remained unresolved.
+  Consequently, every full-study alternative-controller evaluation and optimization
+  solve was skipped by the predefined gate. Zero alternatives found must not be
+  described as empirical failure of the eight-controller bank or the optimizer.
+  The pilot's controller and reference-tracking results remain separate evidence.
+- **Interpretation / limits:** Under the explicit real map and original constraints,
+  no admissible control sequence can maintain 200-step sampled-time safety from
+  those exact 3,230 points. This is stronger than unsuccessful search, and makes
+  rescue searches on that cohort an infeasible improvement objective under the
+  certified model. It is not a universal floating-point, continuous-time,
+  uncertain-state, real-world, or infinite-horizon impossibility claim. The other
+  3,331 grid points retain empirical PD safety: mean/worst return −1.369392/−7.518568,
+  minimum raw margin 0.2. They do not define a mathematically certified continuous
+  viable region or prove safety for another policy. PD reward optimality is unproved.
+- **Decision / reason:** Preserve the certified failures and stop using this
+  original cohort as a safety-rescue target under the same assumptions. Propose
+  policy improvement within a defensible viable operating region, with independent
+  safety outcomes, fair PD/BC comparisons and adequate counterfactual action
+  evidence. First review the scientific design and justification of that region;
+  do not implement Experiment 10, collect data, modify prior methods, or resume
+  unfinished IQL on the strength of this result alone.
+- **Sources:** [Experiment 09 report](experiment_09_report.md),
+  [accepted pilot](experiment_09_pilot_report.md),
+  [reproduction](experiment_09_reproduction.md),
+  [all primary outcomes](../results/recoverable_pd/full_study/primary_state_results.csv),
+  [verification](../results/recoverable_pd/full_study/verification.json);
+  Experiment 09 commit: [9a7943f](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/9a7943fda1dfa251653cee47014d3efa2ba7a193).
