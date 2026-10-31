@@ -362,9 +362,9 @@ Interpretation:
 - it does not cover critical regions
 - this is the desired setup for testing active targeted data acquisition
 
-## 11. Evidence through Experiment 08
+## 11. Evidence through Experiment 09
 
-Experiments 01–05, 06A, 07, and 08 are complete and scientifically reviewed.
+Experiments 01–05, 06A, 07, 08, and 09 are complete and scientifically reviewed.
 Experiment 06/IQL is unfinished. The chronological questions, evidence, decisions,
 and commit/report references are in [docs/RESEARCH_DECISION_LOG.md](docs/RESEARCH_DECISION_LOG.md).
 [CURRENT_STATUS.md](CURRENT_STATUS.md) is the immediate handoff; this section
@@ -406,6 +406,15 @@ replaces the former plan to implement D0 and ensemble uncertainty.
   PD-unsafe cases. All crossed an angle boundary by steps 2–23, using 128-bit
   directed-rounding intervals. There were no false nonviability certificates on
   the 16 reference controls; equilibrium has an exact zero-torque witness.
+- Experiment 09 extended certification to **all 3,230 PD-unsafe points of the
+  exact original Experiment 01 grid**, with zero unresolved primary model cases.
+  A complete 6,561-state PD audit preserved the original observation/action dtypes
+  while checking all 201 raw states. Archived labels, crossing times and legacy
+  minimum margins reproduced exactly. There were 1,615 upper and 1,615 lower
+  angle certificates, at steps 2–42, all at 128 bits. The smallest certified
+  separation was 2.21447048634e−5 rad. The predefined gate skipped all eight
+  alternative-controller searches and all optimization fallback solves in the
+  full study; zero alternatives found is not an empirical search failure.
 
 Experiment 08 uses exact rational parameters and exact archived binary initial
 states: `omega_next = omega + (15*sin(theta)+3*u)/20`,
@@ -420,15 +429,28 @@ viability-grid approximation is used.
 These are model certificates, separate from Gymnasium observations. No global
 implementation-rounding bound, continuous-time, uncertain-state, model-error,
 or infinite-horizon guarantee is established. The references' empirical PD
-witnesses do not become mathematical viability proofs. The selected 40-state sample
-cannot characterize the complete viable region or all PD failures. The result
-motivates distinguishing infeasible starting states from controller mistakes in
-future safe-acquisition design; no safety filter or next experiment is approved here.
+witnesses do not become mathematical viability proofs. Experiment 08's selected
+40-state sample could not characterize all PD failures;
+Experiment 09 subsequently resolved every original grid failure under the same
+real model. Neither study characterizes the complete continuous viable region.
+The 3,331 PD-safe grid points remain empirical finite-horizon simulator evidence,
+not a certified region for arbitrary states or modified policies.
+
+For the original certified PD-unsafe points, rescue is impossible under the
+specified model, torque bounds and safety constraints; further rescue searches
+there would not test an achievable controller-improvement objective. This does
+not establish PD reward optimality. The proposed research shift is policy
+improvement within a defensible viable operating region, keeping reward and safety
+outcomes separate and addressing the lack of counterfactual action support in
+existing deterministic PD data. The region, data assumptions, evaluation and
+method require a new scientific design review. No Experiment 10 implementation,
+safety filter, new data collection, or IQL resumption is authorized here.
 
 Reports: [04](docs/experiment_04_report.md), [05](docs/experiment_05_report.md),
 [06A](docs/experiment_06a_report.md), [07](docs/experiment_07_report.md),
-[08](docs/experiment_08_report.md). IQL diagnostics remain local and uncommitted
-under `results/offline_rl/`; they are not part of the completed Experiment 08 implementation.
+[08](docs/experiment_08_report.md), [09](docs/experiment_09_report.md).
+IQL diagnostics remain local and uncommitted
+under `results/offline_rl/`; they are not part of the completed Experiment 09 implementation.
 
 ## 12. Current repository and reproducibility
 
@@ -444,6 +466,18 @@ evidence are in `results/viability/pilot/` and `results/viability/full_study/`.
 The five pilot cases are preserved unchanged. Reproduction requires the archived
 Experiment 07 state artifacts or their separate reproduction; see
 [Experiment 08 reproduction](docs/experiment_08_reproduction.md).
+
+Experiment 09 adds exact original-grid provenance and observation-faithful PD
+rollouts, archived/legacy/raw comparisons, the frozen gain-bank pilot, a strictly
+reference-only pilot optimizer adapter, full-grid baseline/certificate orchestration,
+and independent saved-array checks. It reuses the unchanged Experiment 07 solver
+and Experiment 08 mathematics. The full study completed on the all-certified
+branch and skipped controller/optimization fallback. Reproduction needs the exact
+Experiment 01 NPZ, not IQL files, D0, or Experiment 07 result archives. See
+[Experiment 09 reproduction](docs/experiment_09_reproduction.md) for clean-export
+checks, prerequisite identity, historical hash verification and the untriggered
+follow-up gate. The accepted pilot, earlier reports and generated archives remain
+unchanged.
 
 Earlier expert-map and D0 benchmark definitions remain unchanged. Their
 observation-derived wrapped-angle/pre-action safety measurements must not be
@@ -478,3 +512,10 @@ Always:
 Current main research question:
 
 > Can a learner use uncertainty and safety information to request targeted data from an existing controller in poorly covered, safety-critical regions, and can that targeted data improve a subsequent offline policy more effectively than the same amount of randomly collected expert data?
+
+The proposed next question, pending design review, is whether a learned policy can
+improve performance within a justified viable operating region while preserving
+separately measured safety. The Experiment 09 certificates remove the original
+PD-unsafe grid points as safety-rescue targets under the certified model; they do
+not supply action alternatives, justify an offline-RL repair, or certify a future
+learned policy.
