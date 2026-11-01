@@ -1,4 +1,4 @@
-# Research Decision Log — Experiments 01–09
+# Research Decision Log — Experiments 01–10
 
 This retrospective log records the evidence and decisions in experiment order.
 Commit references identify versioned milestones, not experiment execution or
@@ -264,3 +264,59 @@ not authorization to start another experiment.
   [all primary outcomes](../results/recoverable_pd/full_study/primary_state_results.csv),
   [verification](../results/recoverable_pd/full_study/verification.json);
   Experiment 09 commit: [9a7943f](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/9a7943fda1dfa251653cee47014d3efa2ba7a193).
+
+
+## 10 — Measure safe improvement headroom before further learning
+
+- **Question / previous understanding:** Experiment 09 certified all 3,230
+  original-grid PD failures nonviable under the explicit real model, so rescue
+  searches there could not test achievable improvement. The other 3,331 points
+  had empirical PD safety, not a certified continuous viable region. PD reward
+  optimality remained unproved; Experiment 06A had shown only small one-action
+  oracle gains, and unfinished IQL lacked counterfactual action support.
+- **Evidence:** Ten frozen controllers were compared on all **3,331** PD-safe
+  points. LQR improved mean return from −1.369391670 to −1.313225930:
+  **+0.056165740**, a **4.10% mean-cost reduction**, below the frozen practical
+  threshold **+0.136939167**. Worst return improved from −7.518567842 to
+  −7.435439946. LQR had **zero violations**, minimum raw margin 0.2, minimum
+  paired return difference 0 and no observed per-state margin loss, but used
+  **6.43% more squared-torque effort**. No tested controller met the approved
+  practical reward, effort or margin-improvement criteria.
+- **Optimization / negative findings:** On the frozen 64-state stratified sample,
+  all **192 original solves succeeded**, yet **0/192 open-loop executions were
+  safe** and **192/192 feedback-tracking executions were safe**. The best-safe
+  tracking oracle improved over matched LQR by only **+0.000007367 mean return**;
+  no selected state gained above 0.01. Tracking oracles genuinely improved PD at
+  64/64 states; open-loop oracles used PD fallback at 64/64, which is not an
+  optimization success. Twelve accepted pilot repeats were technical verification,
+  not extra scientific starts. All 83 included tests passed in the workspace and
+  clean export; the disposable pilot reproduced 330 NPZ bundles and 24 solver
+  candidate vectors bitwise. Full saved-record replay and numerical audits passed.
+- **Interpretation / limits:** A strong classical LQR baseline accounts for almost
+  all demonstrated optimization gain on the selected sample. This is evidence of
+  limited headroom under the tested methods, not proof that PD or LQR is globally
+  optimal, or that no other method can improve. Solver feasibility is separate
+  from safe float32 execution. State-specific, outcome-selected oracle choices
+  are not a deployable single controller. Empirical finite-horizon simulator safety
+  does not establish mathematical, continuous-time, robust or hardware guarantees.
+  The fixed cohort and selected 64 points are not independent population samples;
+  deterministic repeats do not supply statistical replication.
+- **Decision / reason:** Together, Experiments 09–10 remove the original unsafe
+  grid as a model-level rescue target and show little practical reward headroom
+  in the tested safe-cohort methods. Preserve Pendulum as a reproducible
+  methodological benchmark for acquisition, support, replay, safety diagnostics
+  and numerical failure analysis. Before further RL, separately review control
+  tasks or objectives with meaningful, safely achievable improvement headroom,
+  strong classical baselines and justified counterfactual action support. Do not
+  manufacture a positive result through retrospective thresholds or reward tuning.
+  The broader safe-learning/active-expert-acquisition objective remains; these
+  findings do not authorize Experiment 11, new data collection or IQL resumption.
+  Experiment 06 remains unfinished, and its nine untracked files and diagnostic
+  artifacts are preserved unchanged.
+- **Sources:** [Experiment 10 full report](experiment_10_report.md),
+  [accepted pilot](experiment_10_pilot_report.md),
+  [reproduction and finalization checks](experiment_10_reproduction.md),
+  [saved study summary](../results/safe_policy_improvement/full_study/summary.json),
+  [independent verification](../results/safe_policy_improvement/finalization/independent_scientific_audit.json);
+  Experiment 10 commit:
+  [0705df3](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/0705df37295890e2134202f7c0fe61cc08f75306).
