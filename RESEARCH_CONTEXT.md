@@ -362,9 +362,9 @@ Interpretation:
 - it does not cover critical regions
 - this is the desired setup for testing active targeted data acquisition
 
-## 11. Evidence through Experiment 09
+## 11. Evidence through Experiment 10
 
-Experiments 01–05, 06A, 07, 08, and 09 are complete and scientifically reviewed.
+Experiments 01–05, 06A, and 07–10 are complete and scientifically reviewed.
 Experiment 06/IQL is unfinished. The chronological questions, evidence, decisions,
 and commit/report references are in [docs/RESEARCH_DECISION_LOG.md](docs/RESEARCH_DECISION_LOG.md).
 [CURRENT_STATUS.md](CURRENT_STATUS.md) is the immediate handoff; this section
@@ -415,6 +415,19 @@ replaces the former plan to implement D0 and ensemble uncertainty.
   separation was 2.21447048634e−5 rad. The predefined gate skipped all eight
   alternative-controller searches and all optimization fallback solves in the
   full study; zero alternatives found is not an empirical search failure.
+- Experiment 10 compared ten frozen controllers on all 3,331 empirically PD-safe
+  points. LQR improved mean return by **+0.056165740 (4.10% mean-cost reduction)**,
+  with **0/3,331 violations**, minimum raw margin 0.2, no observed per-state margin
+  loss and minimum paired return difference 0. Its squared-torque effort increased
+  **6.43%**, and its reward gain failed the frozen **+0.136939167** threshold.
+  No tested controller passed the practical reward, effort or margin criteria.
+  All **192 original optimization solves succeeded**, but **0/192 open-loop
+  executions were safe** versus **192/192 feedback-tracking executions**.
+  On the prespecified 64-state sample, the best-safe tracking oracle gained only
+  **+0.000007367 mean return over matched LQR**, with no gains above 0.01.
+  Tracking choices genuinely improved PD at all 64 states; open-loop oracles
+  used PD fallback at all 64, which is not optimized success. Solver feasibility,
+  outcome-selected oracle performance and empirical execution safety are separate.
 
 Experiment 08 uses exact rational parameters and exact archived binary initial
 states: `omega_next = omega + (15*sin(theta)+3*u)/20`,
@@ -439,18 +452,29 @@ not a certified region for arbitrary states or modified policies.
 For the original certified PD-unsafe points, rescue is impossible under the
 specified model, torque bounds and safety constraints; further rescue searches
 there would not test an achievable controller-improvement objective. This does
-not establish PD reward optimality. The proposed research shift is policy
-improvement within a defensible viable operating region, keeping reward and safety
-outcomes separate and addressing the lack of counterfactual action support in
-existing deterministic PD data. The region, data assumptions, evaluation and
-method require a new scientific design review. No Experiment 10 implementation,
-safety filter, new data collection, or IQL resumption is authorized here.
+not establish PD reward optimality. Experiment 10 subsequently found limited
+demonstrated performance headroom under its tested methods: a strong classical
+LQR baseline accounts for almost all of the selected optimization oracle's gain.
+This is not a proof of global optimality or absence of improvement under every
+controller. The 64 optimization points are a frozen stratified diagnostic sample,
+and deterministic repeats are verification, not independent statistical samples.
+No mathematical safety guarantee for LQR or tracking was established.
+
+Together, Experiments 09–10 motivate preserving Pendulum as a methodological
+benchmark while evaluating control tasks/objectives with meaningful, safely
+achievable learning headroom. Any future task must justify its objective, strong
+classical baselines, counterfactual action support, and independent safety
+evaluation before training. Do not alter objectives to manufacture favorable
+results. Task selection requires a separate scientific design review; no new
+experiment, safety filter, data collection, RL training, or IQL resumption is
+authorized by this context update.
 
 Reports: [04](docs/experiment_04_report.md), [05](docs/experiment_05_report.md),
 [06A](docs/experiment_06a_report.md), [07](docs/experiment_07_report.md),
-[08](docs/experiment_08_report.md), [09](docs/experiment_09_report.md).
+[08](docs/experiment_08_report.md), [09](docs/experiment_09_report.md),
+[10](docs/experiment_10_report.md).
 IQL diagnostics remain local and uncommitted
-under `results/offline_rl/`; they are not part of the completed Experiment 09 implementation.
+under `results/offline_rl/`; they are not part of the completed Experiment 10 implementation.
 
 ## 12. Current repository and reproducibility
 
@@ -478,6 +502,16 @@ Experiment 01 NPZ, not IQL files, D0, or Experiment 07 result archives. See
 checks, prerequisite identity, historical hash verification and the untriggered
 follow-up gate. The accepted pilot, earlier reports and generated archives remain
 unchanged.
+
+Experiment 10 adds the frozen stratified subset, reward-matched discrete LQR,
+fixed-controller comparisons, unchanged Experiment 07 optimization adapters,
+strict oracle accounting and independent saved-record audits. Source depends on
+committed Experiments 07–09 helpers, not the nine unfinished IQL files. Reproduction
+requires the exact Experiment 01 NPZ and archived Experiment 09 baseline data;
+no new expert-training data are used or produced. The accepted pilot, 64 exact
+subset IDs, solver settings, thresholds and all generated records remain unchanged.
+See [Experiment 10 reproduction](docs/experiment_10_reproduction.md) for dependency,
+clean-export, replay and historical-manifest verification instructions.
 
 Earlier expert-map and D0 benchmark definitions remain unchanged. Their
 observation-derived wrapped-angle/pre-action safety measurements must not be

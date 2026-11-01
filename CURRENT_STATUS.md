@@ -2,12 +2,14 @@
 
 ## Current stage
 
-Experiments 01–05, 06A, 07, 08, and 09 are complete and scientifically reviewed.
+Experiments 01–05, 06A, and 07–10 are complete and scientifically reviewed.
 Experiment 06/IQL remains unfinished: its full ten-seed study was not launched.
-The present task finalizes Experiment 09 and records the research decision.
-The proposed direction is policy improvement within a defensible viable operating
-region. Its scientific design must be reviewed before implementation; no
-Experiment 10, new safety filter, data collection, or IQL resumption is authorized.
+Experiment 10 found limited demonstrated improvement headroom on the original
+PD-safe benchmark under the tested controllers and optimization method.
+Preserve Pendulum as a methodological benchmark; the next task is a separately
+reviewed scientific design for a control objective with meaningful, safely
+achievable learning headroom. No new experiment, safety filter, data collection,
+or IQL resumption is authorized by this status update.
 
 The long-term objective remains safe learning with active expert-data acquisition.
 The evidence now separates imitation-error detection, actual controller improvement,
@@ -40,6 +42,7 @@ and whether an initial state admits any safe control sequence.
 | 07: recoverability optimization | 0/40 PD-unsafe states had verified safe open-loop or tracking witnesses. All 48 converged non-equilibrium reference candidates failed open-loop execution; tracking remained safe on all 16 references. Solver failure alone did not prove nonviability. | [Report](docs/experiment_07_report.md); `040dea5` |
 | 08: finite-horizon viability | **40/40 PD-unsafe states independently certified nonviable for the declared real-valued discrete model**, no unresolved PD-unsafe cases; no false certificates on 16 reference controls. | [Report](docs/experiment_08_report.md); commit reference in [decision log](docs/RESEARCH_DECISION_LOG.md) |
 | 09: original-grid PD failures | **3,230/3,230 original PD failures certified nonviable** under the same real model. All 6,561 baselines audited with unchanged labels/times. Full-study controller search and optimization were skipped by the predefined gate. | [Report](docs/experiment_09_report.md); commit reference in [decision log](docs/RESEARCH_DECISION_LOG.md) |
+| 10: safe policy improvement | LQR mean-return gain +0.056165740 (4.10%), below the frozen +0.136939167 threshold; 0/3,331 violations, 6.43% more squared-torque effort. No tested controller passed any practical improvement criterion. Tracking-oracle gain over matched LQR was only +0.000007367 across 64 states. | [Report](docs/experiment_10_report.md); commit reference in [decision log](docs/RESEARCH_DECISION_LOG.md) |
 
 Experiment 04 uses paired seeds 42–51; Experiment 05 uses 52–61. Reported intervals
 are seed-bootstrap intervals conditional on each study's fixed evaluation set.
@@ -106,15 +109,51 @@ uncertain-state, physical-system, or infinite-horizon guarantee was established.
 Experiment 08 had resolved a separate 40-state sample; Experiment 09 resolves
 all original grid failures under the explicit real model. Searching for safety
 rescues at these certified points cannot succeed under those assumptions.
-The proposed shift is to performance improvement within a justified viable
-operating region, with safety evaluated independently and adequate action-support
-evidence. Choosing that region and the next method remains a design-review task.
+This motivated Experiment 10's performance-headroom study on the empirically
+PD-safe grid, with safety evaluated independently. It did not authorize treating
+those points as a certified continuous viable region.
 
 The accepted five-case pilot is unchanged. Three new full-study tests passed;
 6,561 replay pairs and 1,318,761 raw samples passed independent audit. Preservation
 covered 13,870 pre-existing files at execution. Finalization checks preserve all
 scientific artifacts and distinguish the authorized context/log edits from their
 historical hashes; original manifests remain immutable.
+
+## Experiment 10: limited demonstrated performance headroom
+
+Ten frozen controllers were compared on the same 3,331 archived PD-safe points,
+with 200 transitions and all 201 raw states checked. LQR mean/worst returns were
+−1.313225930/−7.435439946 versus PD −1.369391670/−7.518567842. Its mean gain
+**+0.056165740 (4.10% cost reduction)** fell below the frozen practical threshold
+**+0.136939167**. LQR had **0/3,331 violations**, no observed per-state margin
+loss, minimum raw margin 0.2, and minimum paired return difference 0. However,
+squared-torque effort increased **6.43%**. No tested controller met the approved
+practical reward, effort, or margin-improvement criteria.
+
+The 64-state optimization subset was frozen by four PD-cost strata, PCG64 seed
+101001 and grid-ID tie-breaking before new evaluations. All **192 original
+solves succeeded**, but **0/192 open-loop executions were safe**; **192/192
+feedback-tracking executions were safe**. Every execution was independently
+replayed with float32 torques. The best-safe tracking oracle improved mean return
+over matched LQR by just **+0.000007367** (no state gained more than 0.01).
+All 64 tracking-oracle choices genuinely improved on PD; all 64 open-loop oracle
+outcomes used PD fallback, which is not optimization success. Twelve pilot repeat
+solves are retained separately, not additional scientific starts.
+
+Solver feasibility is not execution safety. Tracking oracles select a different
+outcome-informed candidate per state; they are not a deployable single controller.
+Empirical simulator safety does not establish a mathematical safety guarantee.
+These deterministic finite-cohort results neither prove global reward optimality
+nor exclude better methods or other tasks. They show little demonstrated reward
+headroom under the tested methods and meaningful reward/effort tradeoffs.
+Experiments 09–10 support retaining this benchmark for methodology checks while
+reviewing more meaningful control objectives, rather than manufacturing a positive
+learning result. The deterministic PD action-support limitation remains unresolved.
+
+The accepted pilot, frozen subset, original reports, full-study records and
+verification manifests are preserved. See [reproduction and finalization
+checks](docs/experiment_10_reproduction.md) for clean-export verification and the
+explicit distinction between authorized context edits and historical hashes.
 
 ## Experiment 06/IQL remains unfinished
 
@@ -129,7 +168,7 @@ The deterministic PD datasets lack direct counterfactual actions at identical
 states. Greater state coverage does not establish action coverage or supported
 improvement beyond the teacher. Advantage weighting can reweight imitation;
 it does not supply missing counterfactual evidence. IQL source/config/test/report
-files remain untracked and excluded from Experiment 09 finalization. All local
+files remain untracked and excluded from Experiment 10 finalization. All local
 pilot/diagnostic artifacts are preserved under `results/offline_rl/`.
 
 ## Handoff and preservation
@@ -139,11 +178,20 @@ Read [RESEARCH_CONTEXT.md](RESEARCH_CONTEXT.md), the
 proposing further work. Do not restart completed experiments or tune methods using
 reviewed results. No next experiment is authorized by this status update.
 
-- Latest implementation: `src/recoverable_pd*.py`; entry points
+- Latest implementation: `src/policy_improvement*.py`; entry points
+  `experiments/10_safe_policy_improvement.py` and `experiments/10_full_study.py`.
+  Frozen configurations: `configs/experiment_10_*.json`; dependencies:
+  `requirements_experiment_10.txt`; tests: `tests/test_policy_improvement*.py`.
+- Latest saved evidence: `results/safe_policy_improvement/pilot/` and
+  `results/safe_policy_improvement/full_study/`; 33,310 fixed-controller records,
+  192 original solves, 384 optimization executions and 128 oracle records.
+  Generated outputs remain outside Git; the reviewed scientific reports remain
+  unchanged. [Reproduction](docs/experiment_10_reproduction.md).
+- Preserved Experiment 09 implementation: `src/recoverable_pd*.py`; entry points
   `experiments/09_recoverable_pd.py` and `experiments/09_full_study.py`.
   Configurations: `configs/experiment_09_*.json`; dependencies:
   `requirements_experiment_09.txt`; tests: `tests/test_recoverable_pd*.py`.
-- Latest saved evidence: `results/recoverable_pd/pilot/` and
+- Preserved Experiment 09 evidence: `results/recoverable_pd/pilot/` and
   `results/recoverable_pd/full_study/`; 6,561 baseline rows, 3,230 primary
   certificate rows, 33 reference rows and 6,526 direction rows. Generated outputs
   remain outside Git. See [reproduction](docs/experiment_09_reproduction.md).
