@@ -2,14 +2,15 @@
 
 ## Current stage
 
-Experiments 01–05, 06A, and 07–10 are complete and scientifically reviewed.
+Experiments 01–05, 06A, 07–10 and 11A are complete and scientifically reviewed.
 Experiment 06/IQL remains unfinished: its full ten-seed study was not launched.
-Experiment 10 found limited demonstrated improvement headroom on the original
-PD-safe benchmark under the tested controllers and optimization method.
-Preserve Pendulum as a methodological benchmark; the next task is a separately
-reviewed scientific design for a control objective with meaningful, safely
-achievable learning headroom. No new experiment, safety filter, data collection,
-or IQL resumption is authorized by this status update.
+Experiment 11 Gate 0 passed provenance review, but physically bounded-actuator
+benchmark selection remains BLOCKED by missing engineering specifications.
+The separately approved Experiment 11A reproduced six native ideal-input drilling
+cases; it did not establish physical-reference consistency or bounded-input safety.
+The next task is a separately reviewed design for physical-model consistency
+analysis. No compensation, dynamics change, actuator limits, controller redesign,
+integration refinement, RL training or IQL resumption is authorized here.
 
 The long-term objective remains safe learning with active expert-data acquisition.
 The evidence now separates imitation-error detection, actual controller improvement,
@@ -43,6 +44,7 @@ and whether an initial state admits any safe control sequence.
 | 08: finite-horizon viability | **40/40 PD-unsafe states independently certified nonviable for the declared real-valued discrete model**, no unresolved PD-unsafe cases; no false certificates on 16 reference controls. | [Report](docs/experiment_08_report.md); commit reference in [decision log](docs/RESEARCH_DECISION_LOG.md) |
 | 09: original-grid PD failures | **3,230/3,230 original PD failures certified nonviable** under the same real model. All 6,561 baselines audited with unchanged labels/times. Full-study controller search and optimization were skipped by the predefined gate. | [Report](docs/experiment_09_report.md); commit reference in [decision log](docs/RESEARCH_DECISION_LOG.md) |
 | 10: safe policy improvement | LQR mean-return gain +0.056165740 (4.10%), below the frozen +0.136939167 threshold; 0/3,331 violations, 6.43% more squared-torque effort. No tested controller passed any practical improvement criterion. Tracking-oracle gain over matched LQR was only +0.000007367 across 64 states. | [Report](docs/experiment_10_report.md); commit reference in [decision log](docs/RESEARCH_DECISION_LOG.md) |
+| 11A: native drilling reproduction | Six original/repeat pairs (12 executions) matched 85 numeric fields bitwise. Five cases were sampled-safe; P3 had 401 rotational/358 axial violating samples and 411 lookup failures. Nonzero physical-reference residuals limit interpretation. | [Report](docs/experiment_11a_report.md); commit reference in [decision log](docs/RESEARCH_DECISION_LOG.md) |
 
 Experiment 04 uses paired seeds 42–51; Experiment 05 uses 52–61. Reported intervals
 are seed-bootstrap intervals conditional on each study's fixed evaluation set.
@@ -155,6 +157,54 @@ verification manifests are preserved. See [reproduction and finalization
 checks](docs/experiment_10_reproduction.md) for clean-export verification and the
 explicit distinction between authorized context edits and historical hashes.
 
+## Experiment 11A: reproducible error map, unresolved physical consistency
+
+The exact authoritative ZIP and its distinct source variants were preserved.
+P0 uses the top-level simulation; P1–P4 use Chart_Plot IC1–IC4 with the native
+parameterized IC_Test kernel; P5 is the newly approved zero-error technical input,
+not an archived case. The standalone Chart script is not P3. MATLAB R2024b
+Update 5/MACA64 ran each case twice, with unchanged ideal inputs, 20 seconds at
+1e−4 seconds, and all 200,001 raw error states checked per execution.
+
+All six repeat pairs matched 85 numerical workspace fields bitwise (510
+comparisons). All 2,400,000 recorded transitions were independently reconstructed;
+maximum absolute/state-scaled discrepancies were 3.55271e−15/3.46945e−15.
+No cross-language bitwise equivalence is claimed. There were no execution failures,
+timeouts or nonfinite/nonreal physical trajectories.
+
+P0/P1/P2/P4/P5 remained strictly inside the sampled raw safety domain. P3 had
+401 lower-rotational violations from 0.1323 s and 358 lower-axial violations from
+0.1347 s. Its 411 lookup failures began at 0.1318 s, before the first crossing;
+this temporal ordering does not establish causation. The native stale-memory
+fallback was preserved; 401 lookup attempts had complex indices. No first lookup
+failed, so that failure path was not dynamically exercised. These are finite,
+sampled results for the implemented error dynamics, not mathematical safety proofs.
+
+For the moving physical reference `q_d = IC + Vs*t`, define
+`r0 = F_M,d - D_M*Vs - K_M*IC`. The reconstructed acceleration balance contains
+`r0 - t*K_M*Vs`, which is omitted from the implemented error dynamics. Native
+MATLAB maximum component magnitudes (the largest components are angular) are:
+
+| Quantity | Magnitude | Unit |
+|---|---:|---|
+| r0 | 2.36554798527244e−6 | rad/s² |
+| K_M*Vs | 0.00762011974485406 | rad/s³ |
+| r0 minus saved err.mat | 4.66281145639069e−11 | rad/s² |
+| r0 − 20*K_M*Vs | 0.15240057922651 | rad/s² |
+
+The last value is an acceleration-balance discrepancy evaluated on the reference,
+not a measured trajectory deviation. Independent FEM reassembly confirms the
+nonzero reference-stiffness term. P5 remains exactly at zero in the implemented
+reduced error map; this does not prove an exact physical reference trajectory.
+No residual compensation or recalculation of the original parameters was applied.
+
+Keep four findings separate: native bitwise reproducibility passes; sampled
+raw-state safety holds for five cases and fails for P3; exact physical-reference
+consistency is unresolved with nonzero residuals; physically admissible bounded-input
+safety remains blocked. No engineering actuator bounds were supplied or inferred
+from the observed inputs. Physical consistency must be reviewed before safe RL
+controller development. [Reproduction and read-only verification](docs/experiment_11a_reproduction.md).
+
 ## Experiment 06/IQL remains unfinished
 
 The seed-41 expanded-data critic diverged. Freezing 138 safety-stopped continuation
@@ -168,7 +218,7 @@ The deterministic PD datasets lack direct counterfactual actions at identical
 states. Greater state coverage does not establish action coverage or supported
 improvement beyond the teacher. Advantage weighting can reweight imitation;
 it does not supply missing counterfactual evidence. IQL source/config/test/report
-files remain untracked and excluded from Experiment 10 finalization. All local
+files remain untracked and excluded from Experiment 11A finalization. All local
 pilot/diagnostic artifacts are preserved under `results/offline_rl/`.
 
 ## Handoff and preservation
@@ -178,11 +228,21 @@ Read [RESEARCH_CONTEXT.md](RESEARCH_CONTEXT.md), the
 proposing further work. Do not restart completed experiments or tune methods using
 reviewed results. No next experiment is authorized by this status update.
 
-- Latest implementation: `src/policy_improvement*.py`; entry points
+- Latest implementation: `src/drilling_reproduction.py`, `src/drilling_numerical_audit.py`,
+  `src/drilling_pilot_verification.py` and `src/matlab/e11a_*.m`. Entry point:
+  `experiments/11a_native_drilling.py`; configuration: `configs/experiment_11a.json`;
+  dependencies: `requirements_experiment_11a.txt`. Frozen native execution files
+  retain their original hashes. Additive read-only verification uses
+  `experiments/11a_verify_native.py`; tests: `tests/test_drilling*.py`.
+- Latest saved evidence: `results/drilling_reproduction/native_pilot/`;
+  all 12 native workspaces, histories, source snapshots, audits and original
+  completion markers remain unchanged and outside Git. Finalization audits are
+  separate, under `results/drilling_reproduction/finalization/`.
+- Preserved Experiment 10 implementation: `src/policy_improvement*.py`; entry points
   `experiments/10_safe_policy_improvement.py` and `experiments/10_full_study.py`.
   Frozen configurations: `configs/experiment_10_*.json`; dependencies:
   `requirements_experiment_10.txt`; tests: `tests/test_policy_improvement*.py`.
-- Latest saved evidence: `results/safe_policy_improvement/pilot/` and
+- Preserved Experiment 10 evidence: `results/safe_policy_improvement/pilot/` and
   `results/safe_policy_improvement/full_study/`; 33,310 fixed-controller records,
   192 original solves, 384 optimization executions and 128 oracle records.
   Generated outputs remain outside Git; the reviewed scientific reports remain

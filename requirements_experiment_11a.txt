@@ -1,0 +1,5 @@
+# Native execution additionally requires licensed MATLAB R2024b Update 5, MACA64.
+# MATLAB synthesis toolboxes are not required: the authoritative gain table is loaded.
+numpy==2.3.2
+scipy==1.18.1
+# For the full historical Python suite, also install requirements_experiment_10.txt.

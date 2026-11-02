@@ -57,6 +57,12 @@ High-level architecture:
 
 `states -> tracking errors -> barrier transformation -> LPV gain lookup -> surface force/torque`
 
+These describe the authoritative package, not a validated bounded-actuator plant.
+Experiment 11A later established native numerical reproducibility and found
+nonzero physical-reference balance terms omitted from the implemented error map.
+Its zero-error technical trajectory is not proof of an exact physical reference
+trajectory; see section 11 before making model-specific safety claims.
+
 ## 3. Drilling safety constraints
 
 Desired bit velocities:
@@ -84,6 +90,11 @@ Axial bounds are state-dependent:
 The transformed axial and rotational errors are used by the LPV controller as scheduling variables.
 
 ## 4. Drilling benchmark findings
+
+The following are preserved historical ideal-input numerical summaries, not
+physically bounded-input safety results or proof of physical-model consistency.
+Experiment 11A's full initial-to-terminal audit and residual findings qualify
+their interpretation; no earlier trajectory or summary was rewritten.
 
 ### 4.1 Nominal benchmark
 
@@ -362,9 +373,9 @@ Interpretation:
 - it does not cover critical regions
 - this is the desired setup for testing active targeted data acquisition
 
-## 11. Evidence through Experiment 10
+## 11. Evidence through Experiment 11A
 
-Experiments 01–05, 06A, and 07–10 are complete and scientifically reviewed.
+Experiments 01–05, 06A, 07–10 and 11A are complete and scientifically reviewed.
 Experiment 06/IQL is unfinished. The chronological questions, evidence, decisions,
 and commit/report references are in [docs/RESEARCH_DECISION_LOG.md](docs/RESEARCH_DECISION_LOG.md).
 [CURRENT_STATUS.md](CURRENT_STATUS.md) is the immediate handoff; this section
@@ -469,12 +480,49 @@ results. Task selection requires a separate scientific design review; no new
 experiment, safety filter, data collection, RL training, or IQL resumption is
 authorized by this context update.
 
+Experiment 11 Gate 0 inspected the exact authoritative package, not the incorrect
+8-state model. The top-level and Chart standalone scripts have different active
+initial errors; the latter is also distinct from Chart_Plot IC3. The gain table
+and nominal inputs do not supply engineering actuator bounds. Gate 0 passed
+provenance review, but a physically bounded-input safe-RL benchmark remains blocked.
+
+The separate Experiment 11A native ideal-input reproduction used P0 from the
+top-level script, P1–P4 from Chart_Plot through native IC_Test, and a new P5
+zero-error control. Six original/repeat pairs (12 executions) matched 85 numerical
+fields bitwise. All 200,001 raw states were checked per execution. P0/P1/P2/P4/P5
+were strictly sampled-safe. P3 had 401 lower-rotational and 358 lower-axial violating
+samples, beginning at 0.1323/0.1347 s. Its 411 lookup failures began at 0.1318 s;
+precedence does not establish that they caused the crossing. Original fallback
+semantics were preserved. No first lookup failure was dynamically exercised.
+There were no runtime failures or nonfinite/nonreal physical histories.
+
+For the reference `q_d=IC+Vs*t`, let `r0=F_M,d-D_M*Vs-K_M*IC`. The physical
+reference acceleration balance contains `r0-t*K_M*Vs`; the implemented reduced
+error dynamics omit it. Largest component magnitudes from native MATLAB were
+2.36554798527244e−6 rad/s² for r0, 0.00762011974485406 rad/s³ for K_M*Vs,
+and 4.66281145639069e−11 rad/s² for r0 minus saved err.mat. At 20 seconds the
+largest magnitude of the omitted term is 0.15240057922651 rad/s². This is a
+reference acceleration-balance discrepancy, not a measured trajectory deviation.
+Independent FEM reassembly confirms nonzero K_M*Vs. P5 remains exactly at the
+zero-error equilibrium of the implemented reduced map; it does not prove an
+exact physical reference trajectory. No compensation or altered dynamics were used.
+
+Numerical reproducibility, sampled safety, physical-reference consistency, and
+physically admissible bounded-input safety are separate findings. The first
+passes; P3 fails the second; the nonzero residuals limit the third; the fourth
+remains blocked by missing engineering specifications. The next step is a
+separately reviewed physical-model consistency design before safe RL controller
+development. No refinement, residual insertion, new actuator limits, controller
+redesign or IQL resumption is authorized. Earlier drilling summaries in section 4
+remain historical; E11A includes the initial sample, giving smaller P1/P4 axial
+margins without changing the archived records.
+
 Reports: [04](docs/experiment_04_report.md), [05](docs/experiment_05_report.md),
 [06A](docs/experiment_06a_report.md), [07](docs/experiment_07_report.md),
 [08](docs/experiment_08_report.md), [09](docs/experiment_09_report.md),
-[10](docs/experiment_10_report.md).
+[10](docs/experiment_10_report.md), [11A](docs/experiment_11a_report.md).
 IQL diagnostics remain local and uncommitted
-under `results/offline_rl/`; they are not part of the completed Experiment 10 implementation.
+under `results/offline_rl/`; they are not part of the completed Experiment 11A implementation.
 
 ## 12. Current repository and reproducibility
 
@@ -513,6 +561,17 @@ subset IDs, solver settings, thresholds and all generated records remain unchang
 See [Experiment 10 reproduction](docs/experiment_10_reproduction.md) for dependency,
 clean-export, replay and historical-manifest verification instructions.
 
+Experiment 11A adds native MATLAB orchestration and observational capture with
+unmodified authoritative source copies, plus static FEM/load/lookup audits. The
+six-case archive and source snapshots are preserved under
+`results/drilling_reproduction/native_pilot/`. Runtime requires the exact external
+ZIP, base MATLAB R2024b Update 5/MACA64 and NumPy/SciPy; LMI synthesis is not used.
+It requires none of the unfinished IQL files. Read-only verification and clean-export
+saved-record audits are documented in [Experiment 11A reproduction](docs/experiment_11a_reproduction.md).
+Historical reports/manifests remain immutable; context-document updates and the
+clarified versioned report are verified separately. No additional control runs
+are needed for finalization.
+
 Earlier expert-map and D0 benchmark definitions remain unchanged. Their
 observation-derived wrapped-angle/pre-action safety measurements must not be
 silently equated with later full-horizon raw-state checks. Preserve source,
@@ -547,9 +606,9 @@ Current main research question:
 
 > Can a learner use uncertainty and safety information to request targeted data from an existing controller in poorly covered, safety-critical regions, and can that targeted data improve a subsequent offline policy more effectively than the same amount of randomly collected expert data?
 
-The proposed next question, pending design review, is whether a learned policy can
-improve performance within a justified viable operating region while preserving
-separately measured safety. The Experiment 09 certificates remove the original
-PD-unsafe grid points as safety-rescue targets under the certified model; they do
-not supply action alternatives, justify an offline-RL repair, or certify a future
-learned policy.
+The immediate next design review concerns the physical-model consistency of the
+authoritative drilling reference and error equations. The long-term learning
+question remains, but Experiment 11A's reproducible reduced map does not settle
+physical consistency or bounded-input safety. Experiment 09's certificates apply
+to its declared Pendulum model; they do not transfer to drilling, supply action
+alternatives, justify an offline-RL repair, or certify a future learned policy.
