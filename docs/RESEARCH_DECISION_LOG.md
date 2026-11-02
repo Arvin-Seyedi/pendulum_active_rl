@@ -1,4 +1,4 @@
-# Research Decision Log — Experiments 01–10
+# Research Decision Log — Experiments 01–11A
 
 This retrospective log records the evidence and decisions in experiment order.
 Commit references identify versioned milestones, not experiment execution or
@@ -320,3 +320,69 @@ not authorization to start another experiment.
   [independent verification](../results/safe_policy_improvement/finalization/independent_scientific_audit.json);
   Experiment 10 commit:
   [0705df3](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/0705df37295890e2134202f7c0fe61cc08f75306).
+
+
+## 11 / 11A — Establish native drilling reproducibility before physical-model claims
+
+- **Question / previous understanding:** Experiments 09–10 excluded the original
+  Pendulum grid as a model-level rescue target and demonstrated limited practical
+  headroom in the tested safe-cohort methods. The next task was benchmark
+  feasibility, not another assumed RL improvement. Experiment 11 Gate 0 inspected
+  the actual authoritative directional-drilling ZIP, distinct script variants and
+  stored parameters. Provenance review passed; physically bounded-actuator safety
+  remained blocked because no applicable engineering actuator contract was sourced.
+- **Approved scope / evidence:** Experiment 11A separately reproduced ideal-input
+  native MATLAB numerics only. P0 used the top-level script; P1–P4 used exact
+  Chart_Plot IC1–IC4 through native IC_Test; P5 was a newly approved zero-error
+  control, not an archived case. The standalone Chart script was not substituted
+  for IC3. Six original/repeat pairs (**12 executions**) matched all **85 numeric
+  workspace fields bitwise**, on MATLAB R2024b Update 5/MACA64. All 200,001 raw
+  states per execution were checked. All 2,400,000 recorded transitions passed
+  independent reconstruction, with maximum absolute/state-scaled discrepancies
+  3.55271e−15/3.46945e−15. No cross-language bitwise equivalence is claimed.
+- **Safety and lookup findings:** P0/P1/P2/P4/P5 were strictly sampled-safe.
+  P3 had **401 lower-rotational violations** from **0.1323 s** and **358
+  lower-axial violations** from **0.1347 s**. Its **411 lookup failures** began
+  at **0.1318 s**, preceding the first crossing; this does not establish causation.
+  There were 401 attempts with complex indices. Original stale-memory fallback
+  was preserved. No first lookup failed, leaving that failure path dynamically
+  unexercised. No physical trajectory was nonfinite/nonreal, and no native run
+  failed or timed out. Initial-sample inclusion explains the smaller P1/P4 axial
+  margins relative to earlier historical summaries.
+- **Physical-reference limitation:** For `q_d=IC+Vs*t`, define
+  `r0=F_M,d-D_M*Vs-K_M*IC`. Reconstructed physical acceleration balance includes
+  `r0-t*K_M*Vs`, omitted from the implemented reduced error dynamics. Native
+  maximum component magnitudes, in their dominant angular components, were
+  **2.36554798527244e−6 rad/s²** for r0,
+  **0.00762011974485406 rad/s³** for K_M*Vs, and
+  **4.66281145639069e−11 rad/s²** for r0 minus saved err.mat. At 20 seconds the
+  omitted term has maximum magnitude **0.15240057922651 rad/s²**. This is a
+  reference acceleration-balance discrepancy, **not a measured trajectory
+  deviation**. Independent FEM reassembly confirms nonzero K_M*Vs. P5 remains
+  exactly at the zero-error equilibrium of the implemented reduced map, not a
+  demonstrated exact physical reference trajectory. No compensation was inserted.
+- **Interpretation / limits:** Native bitwise reproducibility, sampled raw-state
+  safety, physical-reference consistency and physically admissible bounded-input
+  safety are distinct conclusions. The numerical milestone passes; P3 is unsafe;
+  physical consistency is limited by nonzero reference residuals; bounded-input
+  feasibility remains blocked. Deterministic repeats are verification rather than
+  population samples or formal safety guarantees. The native ideal-input results
+  do not establish a safe expert, a backup controller, or RL improvement headroom.
+- **Decision / reason:** Accept and preserve Experiment 11A as a reproducible
+  numerical milestone. Before safe RL controller development, separately review
+  a focused investigation of the physical-reference/error-equation relationship;
+  otherwise learning could optimize an error map whose physical interpretation is
+  not established. Do not silently compensate residuals, recalculate parameters,
+  insert actuator limits or redesign the controller. No integration refinement,
+  new control experiment or IQL resumption follows automatically. Experiment 06
+  remains unfinished and its nine untracked files remain unchanged.
+- **Finalization / sources:** All **92 included tests passed** in workspace and
+  clean export. The export re-audited the accepted records without new MATLAB
+  processes or control rollouts. Original reports/manifests, source identities,
+  the authority ZIP/scripts and Experiments 01–10 remain preserved; the versioned
+  report adds reviewed clarifications. See [scientific report](experiment_11a_report.md),
+  [reproduction and read-only checks](experiment_11a_reproduction.md),
+  [original native verification](../results/drilling_reproduction/native_pilot/final_verification.json),
+  [clean-export verification](../results/drilling_reproduction/finalization/clean_export_final_verification.json);
+  Experiment 11A commit:
+  [3757db5](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/3757db51f87f2ff84b7c1f123cd60620c0a53630).
