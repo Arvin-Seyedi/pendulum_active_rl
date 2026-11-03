@@ -1,4 +1,4 @@
-# Research Decision Log — Experiments 01–11A
+# Research Decision Log — Experiments 01–11B
 
 This retrospective log records the evidence and decisions in experiment order.
 Commit references identify versioned milestones, not experiment execution or
@@ -386,3 +386,67 @@ not authorization to start another experiment.
   [clean-export verification](../results/drilling_reproduction/finalization/clean_export_final_verification.json);
   Experiment 11A commit:
   [3757db5](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/3757db51f87f2ff84b7c1f123cd60620c0a53630).
+
+## 11B — Confirm numerical reference inconsistency before changing the physical model
+
+- **Question / previous understanding:** Experiment 11A established bitwise native
+  reproduction and observed nonzero reference-balance terms. It did not resolve
+  whether those terms reflected numerical assembly/conditioning effects or an
+  exact error-coordinate inconsistency. Physical contact assumptions and an
+  engineering actuator contract were still unverified. The approved 11B scope
+  was static mathematical verification using the original data and archived
+  trajectories, without any plant correction or new control execution.
+- **New evidence:** Source provenance, executed FEM/coordinate reconstruction
+  and the algebraic error transformation passed. Exact rational products of
+  archived binary64 operands give maximum angular components
+  **2.36554798765712e−6 rad/s²** for `r0=F_M,d-D_M*Vs-K_M*IC` and
+  **0.00762011974485422 rad/s³** for `K_M*Vs`. Independent **128/256-bit**
+  directed-rounding reassembly separates both residual vectors from zero. The
+  dominant reassembled stiffness-reference term is **0.00762011974664 rad/s³**;
+  tested dot rounding (~6.325e−15) and assembly perturbations (~1.694e−11 in that
+  component) do not explain it. The native error equation omits `r0-t*K_M*Vs`,
+  approximately **−0.152400579 rad/s²** in its dominant component at 20 seconds.
+  This is a **matched-state equation discrepancy, not a trajectory deviation**.
+- **Independent checks:** All **108 archived points** passed. The independent
+  rational checker verified **54 unique equations and 540 componentwise rounding
+  bounds**, with six bitwise-identical archived sample pairs. The maximum floating
+  identity discrepancy was 1.28210e−11, below the frozen 1e−8 scaled tolerance.
+  Static finalization replay reproduced exact products, both interval endpoint
+  sets, four nominal-load variants and all 108 points directly from the saved
+  native workspaces. No state was advanced or controller called.
+- **Physical interpretation remains unresolved:** The **14.07%** stiffness
+  comparison is `||K_alt-K_M||_F/||K_alt||_F`, between the native projection and
+  an ideal-holonomic-constraint alternative in fixed SI coordinates. It is not
+  measured physical modeling error and does not establish that the conventional
+  alternative is correct. Chapter 5's stated geometric constraints do not by
+  themselves establish the necessary contact/reaction closure. Retain the printed
+  rotation-sign discrepancy, `cond2(K_M)≈4.03e17`, threshold-dependent numerical
+  rank 9/10, displacement origins and nodal/element-frame distinctions. Nominal
+  bit loads are constant on the reference; native initial nominal-load bookkeeping
+  is separate from the omitted forcing. P5 is an equilibrium of the implemented
+  error map, not a verified exact physical reference trajectory. No cause for
+  P3's safety crossing is established by these checks.
+- **Scientific decision / reason:** Accept 11B as validation of properties of
+  the archived numerical model, **not validation of the physical drilling plant**.
+  Preserve the original idealized error simulator with that qualification.
+  Do not automatically insert residual compensation, recalculate the reference,
+  substitute the conventional reduction, or redesign physical control: the
+  physical reference and contact/reaction assumptions are not yet established.
+  Missing engineering actuator specifications remain a separate blocker. A
+  focused next physical-model investigation requires its own reviewed design;
+  none is implemented here. Experiment 06/IQL remains unfinished and all nine
+  local files remain unchanged; no RL training or new expert data follow.
+- **Finalization / sources:** All **108 applicable regression tests passed in
+  both workspace and clean export**. The export excluded the nine IQL files.
+  Accepted reports, source snapshots, failed technical attempts and generated
+  artifacts remain unchanged; preservation covered 53,435 historical project
+  files and 87 authority files, with exact historical Git checks for authorized
+  context/log updates. Verification wrote zero accepted-archive files and launched
+  zero MATLAB processes or new research/control trajectories. See the
+  [scientific report](experiment_11b_report.md),
+  [reproduction and read-only checks](experiment_11b_reproduction.md),
+  [accepted integrity manifest](../results/drilling_static_audit/approved_static/final_integrity.json),
+  [workspace verification](../results/drilling_static_audit/finalization/workspace_verification.json),
+  [clean-export verification](../results/drilling_static_audit/finalization/clean_export_verification.json);
+  Experiment 11B commit:
+  [f2b0696](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/f2b0696269693cca98f263de8bdf97aedf2e7824).
