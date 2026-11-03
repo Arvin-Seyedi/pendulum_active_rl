@@ -2,14 +2,16 @@
 
 ## Current stage
 
-Experiments 01–05, 06A, 07–10 and 11A are complete and scientifically reviewed.
+Experiments 01–05, 06A, 07–10 and 11A–11B are complete and scientifically reviewed.
 Experiment 06/IQL remains unfinished: its full ten-seed study was not launched.
 Experiment 11 Gate 0 passed provenance review, but physically bounded-actuator
 benchmark selection remains BLOCKED by missing engineering specifications.
 The separately approved Experiment 11A reproduced six native ideal-input drilling
 cases; it did not establish physical-reference consistency or bounded-input safety.
-The next task is a separately reviewed design for physical-model consistency
-analysis. No compensation, dynamics change, actuator limits, controller redesign,
+Experiment 11B confirms nonzero reference residuals for the archived numerical
+model beyond tested rounding/assembly effects. Physical contact/reaction assumptions
+remain unresolved. Any next physical-model investigation needs separate design
+review. No compensation, dynamics change, actuator limits, controller redesign,
 integration refinement, RL training or IQL resumption is authorized here.
 
 The long-term objective remains safe learning with active expert-data acquisition.
@@ -45,6 +47,7 @@ and whether an initial state admits any safe control sequence.
 | 09: original-grid PD failures | **3,230/3,230 original PD failures certified nonviable** under the same real model. All 6,561 baselines audited with unchanged labels/times. Full-study controller search and optimization were skipped by the predefined gate. | [Report](docs/experiment_09_report.md); commit reference in [decision log](docs/RESEARCH_DECISION_LOG.md) |
 | 10: safe policy improvement | LQR mean-return gain +0.056165740 (4.10%), below the frozen +0.136939167 threshold; 0/3,331 violations, 6.43% more squared-torque effort. No tested controller passed any practical improvement criterion. Tracking-oracle gain over matched LQR was only +0.000007367 across 64 states. | [Report](docs/experiment_10_report.md); commit reference in [decision log](docs/RESEARCH_DECISION_LOG.md) |
 | 11A: native drilling reproduction | Six original/repeat pairs (12 executions) matched 85 numeric fields bitwise. Five cases were sampled-safe; P3 had 401 rotational/358 axial violating samples and 411 lookup failures. Nonzero physical-reference residuals limit interpretation. | [Report](docs/experiment_11a_report.md); commit reference in [decision log](docs/RESEARCH_DECISION_LOG.md) |
+| 11B: static reference audit | Exact-rational and 128/256-bit interval checks confirm both reference identities fail for the archived model. Omitted forcing is approximately −0.152400579 rad/s² at 20 s; it is an equation discrepancy, not trajectory drift. Physical constrained reduction remains unresolved. | [Report](docs/experiment_11b_report.md); [reproduction](docs/experiment_11b_reproduction.md) |
 
 Experiment 04 uses paired seeds 42–51; Experiment 05 uses 52–61. Reported intervals
 are seed-bootstrap intervals conditional on each study's fixed evaluation set.
@@ -199,11 +202,46 @@ reduced error map; this does not prove an exact physical reference trajectory.
 No residual compensation or recalculation of the original parameters was applied.
 
 Keep four findings separate: native bitwise reproducibility passes; sampled
-raw-state safety holds for five cases and fails for P3; exact physical-reference
-consistency is unresolved with nonzero residuals; physically admissible bounded-input
+raw-state safety holds for five cases and fails for P3; 11A did not establish exact
+physical-reference consistency; physically admissible bounded-input
 safety remains blocked. No engineering actuator bounds were supplied or inferred
 from the observed inputs. Physical consistency must be reviewed before safe RL
 controller development. [Reproduction and read-only verification](docs/experiment_11a_reproduction.md).
+
+## Experiment 11B: numerical inconsistency confirmed, physical assumptions unresolved
+
+The reviewed static audit froze the authoritative sources, binary64 operators,
+IC, Vs and nominal inputs. Source provenance, executed matrix/coordinate
+reconstruction and algebraic error transformation passed. Exact archived products
+give maximum angular components `|r0|=2.36554798765712e−6 rad/s²` and
+`|K_M*Vs|=0.00762011974485422 rad/s³`. Independently reassembled 128/256-bit
+directed-rounding enclosures exclude zero for both identities. The dominant
+reassembled reference-stiffness term is `0.00762011974664 rad/s³`; tested dot
+rounding (~6.325e−15) and assembly perturbations (~1.694e−11 in that component)
+do not explain it.
+
+The derived error equation includes `r0-t*K_M*Vs`, omitted by the native map.
+At 20 s its dominant component is approximately **−0.152400579 rad/s²**.
+This is a matched-state acceleration discrepancy, not an integrated or measured
+trajectory deviation, and does not establish a cause for P3's safety failure.
+
+The reported **14.07%** difference compares the native reduced stiffness matrix
+with an ideal-holonomic-constraint alternative, using a relative Frobenius norm
+in the fixed SI coordinates. It is not measured physical modeling error, and
+the alternative is not assumed physically correct. Chapter 5's contact/reaction
+closure remains unresolved. Retain the printed rotation-sign discrepancy,
+`cond2(K_M)≈4.03e17`, threshold-dependent numerical rank 9/10, nodal versus
+element-chord frames, constant nominal loads and initial native-load bookkeeping.
+Nominal commands do not supply actuator limits.
+
+All 108 archived sample points passed; the independent checker verified 54 unique
+equations and 540 exact-rational rounding bounds. The original 21 pilot tests,
+source identities and failed technical attempts are preserved. Finalization adds
+read-only static replay and clean-export checks; see the [report](docs/experiment_11b_report.md)
+and [reproduction guide](docs/experiment_11b_reproduction.md). No new drilling
+trajectory or controller was executed. Numerical-model validation does not validate
+the physical drilling plant. Preserve the original idealized map; residual
+compensation and physical-controller redesign are not justified by this audit alone.
 
 ## Experiment 06/IQL remains unfinished
 
@@ -218,7 +256,7 @@ The deterministic PD datasets lack direct counterfactual actions at identical
 states. Greater state coverage does not establish action coverage or supported
 improvement beyond the teacher. Advantage weighting can reweight imitation;
 it does not supply missing counterfactual evidence. IQL source/config/test/report
-files remain untracked and excluded from Experiment 11A finalization. All local
+files remain untracked and excluded from Experiment 11B finalization. All local
 pilot/diagnostic artifacts are preserved under `results/offline_rl/`.
 
 ## Handoff and preservation

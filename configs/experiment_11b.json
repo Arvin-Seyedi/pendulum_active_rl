@@ -1,0 +1,22 @@
+{
+  "experiment": "11B_static_physical_reference_consistency_audit",
+  "archive_config": "configs/experiment_11a.json",
+  "accepted_evidence": "results/drilling_reproduction/native_pilot",
+  "output": "results/drilling_static_audit/approved_static",
+  "cases": ["P0", "P1", "P2", "P3", "P4", "P5"],
+  "indices": [0, 1, 10, 1000, 10000, 50000, 100000, 199999, 200000],
+  "nominal_times_seconds": [0, 1, 5, 10, 20],
+  "precisions_bits": [128, 256],
+  "matrix_relative_tolerance": 1e-10,
+  "rhs_scaled_tolerance": 1e-8,
+  "coordinate_scales": "1 m, 1 rad, 1 s; numerical normalization, not engineering limits",
+  "workers": 1,
+  "cpu_seconds_cap": 1800,
+  "rss_bytes_cap": 2147483648,
+  "new_trajectories": 0,
+  "controller_calls": 0,
+  "modify_authority": false,
+  "precision_input_contract": "Exact frozen binary64 primitive geometry, angles, section/material scalars, IC, Vs and nominal loads. MPFR transcendental functions are enclosed, not replaced by stored outputs. Native binary64 pi and mathematical pi are reported separately for nominal loads.",
+  "exact_zero_rule": "Exact rational zero or a symbolic proof; an interval overlapping zero is unresolved.",
+  "stop_conditions": ["hash mismatch", "missing archived field", "unexplained coordinate or sign mismatch", "interval denominator or branch unresolved at approved precision", "independent reconstruction beyond tolerance", "CPU or RSS cap"]
+}

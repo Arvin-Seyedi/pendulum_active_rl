@@ -61,7 +61,9 @@ These describe the authoritative package, not a validated bounded-actuator plant
 Experiment 11A later established native numerical reproducibility and found
 nonzero physical-reference balance terms omitted from the implemented error map.
 Its zero-error technical trajectory is not proof of an exact physical reference
-trajectory; see section 11 before making model-specific safety claims.
+trajectory. Experiment 11B confirms numerical reference inconsistency beyond the
+tested rounding/assembly effects, while physical contact/reaction assumptions
+remain unresolved; see section 11 before making model-specific safety claims.
 
 ## 3. Drilling safety constraints
 
@@ -373,9 +375,9 @@ Interpretation:
 - it does not cover critical regions
 - this is the desired setup for testing active targeted data acquisition
 
-## 11. Evidence through Experiment 11A
+## 11. Evidence through Experiment 11B
 
-Experiments 01–05, 06A, 07–10 and 11A are complete and scientifically reviewed.
+Experiments 01–05, 06A, 07–10 and 11A–11B are complete and scientifically reviewed.
 Experiment 06/IQL is unfinished. The chronological questions, evidence, decisions,
 and commit/report references are in [docs/RESEARCH_DECISION_LOG.md](docs/RESEARCH_DECISION_LOG.md).
 [CURRENT_STATUS.md](CURRENT_STATUS.md) is the immediate handoff; this section
@@ -510,19 +512,52 @@ exact physical reference trajectory. No compensation or altered dynamics were us
 Numerical reproducibility, sampled safety, physical-reference consistency, and
 physically admissible bounded-input safety are separate findings. The first
 passes; P3 fails the second; the nonzero residuals limit the third; the fourth
-remains blocked by missing engineering specifications. The next step is a
-separately reviewed physical-model consistency design before safe RL controller
-development. No refinement, residual insertion, new actuator limits, controller
+remains blocked by missing engineering specifications. Experiment 11B subsequently
+audited the reference/error-model relationship without new trajectories. No
+refinement, residual insertion, new actuator limits, controller
 redesign or IQL resumption is authorized. Earlier drilling summaries in section 4
 remain historical; E11A includes the initial sample, giving smaller P1/P4 axial
 margins without changing the archived records.
 
+Experiment 11B independently reconstructed the fixed FEM, coordinate maps,
+nominal loads and reduced operators. Provenance, executed reconstruction and the
+derived error transformation passed. Exact rational products of frozen binary64
+operands give maximum components `|r0|=2.36554798765712e−6 rad/s²` and
+`|K_M*Vs|=0.00762011974485422 rad/s³`. Independent 128/256-bit directed-rounding
+reassembly confirms nonzero residuals (dominant `K_M*Vs≈0.00762011974664 rad/s³`).
+Tested dot-product rounding and matrix-assembly perturbations do not explain the
+dominant term. The physical-minus-implemented acceleration includes
+`r0-t*K_M*Vs≈−0.152400579 rad/s²` in its dominant component at 20 seconds.
+This is a matched-state equation discrepancy, not a trajectory deviation.
+
+The 14.07% stiffness-operator comparison uses the relative Frobenius norm between
+native projection and an ideal-holonomic-constraint alternative, with the
+alternative's norm as denominator in fixed SI coordinates. It is not a measured
+physical modeling error or evidence that the alternative reduction is correct.
+The geometry constraints alone do not establish the native `S*M^-1` projection;
+the required contact/reaction assumptions remain unresolved. Retain the printed
+rotation-sign discrepancy, severe conditioning (`cond2(K_M)≈4.03e17`),
+threshold-dependent numerical rank, displacement origins, nodal/chord frame
+distinction, constant nominal loads and initial-load conventions. P5 remains an
+equilibrium of the implemented error map, not a verified exact physical reference.
+
+The static audit checked 108 archived points, six bitwise-identical sample pairs,
+54 independent unique equations and 540 componentwise rational rounding bounds.
+All 21 pilot tests passed. Finalization separately verifies static arithmetic and
+clean-export dependencies while preserving the accepted archive. This validates
+properties of an archived numerical model, not the physical drilling plant.
+Preserve the idealized map; do not automatically insert compensation or redesign
+a controller. A separately reviewed physical-reference/contact investigation and
+a sourced engineering actuator contract are both still required before physically
+bounded drilling safe-RL development. No next investigation is implemented here.
+
 Reports: [04](docs/experiment_04_report.md), [05](docs/experiment_05_report.md),
 [06A](docs/experiment_06a_report.md), [07](docs/experiment_07_report.md),
 [08](docs/experiment_08_report.md), [09](docs/experiment_09_report.md),
-[10](docs/experiment_10_report.md), [11A](docs/experiment_11a_report.md).
+[10](docs/experiment_10_report.md), [11A](docs/experiment_11a_report.md),
+[11B](docs/experiment_11b_report.md).
 IQL diagnostics remain local and uncommitted
-under `results/offline_rl/`; they are not part of the completed Experiment 11A implementation.
+under `results/offline_rl/`; they are not part of the completed Experiment 11B implementation.
 
 ## 12. Current repository and reproducibility
 
@@ -572,6 +607,14 @@ Historical reports/manifests remain immutable; context-document updates and the
 clarified versioned report are verified separately. No additional control runs
 are needed for finalization.
 
+Experiment 11B adds exact-rational and directed-rounding static audits without
+native controller calls or state integration. The accepted evidence remains at
+`results/drilling_static_audit/approved_static/`; additive finalization evidence
+is separate. The committed read-only entry point can replay the static arithmetic
+from a clean code export with an explicit scientific-data root. It requires the
+accepted 11A/11B archives and sourced authority, not unfinished IQL code or a
+MATLAB license. See [Experiment 11B reproduction](docs/experiment_11b_reproduction.md).
+
 Earlier expert-map and D0 benchmark definitions remain unchanged. Their
 observation-derived wrapped-angle/pre-action safety measurements must not be
 silently equated with later full-horizon raw-state checks. Preserve source,
@@ -606,9 +649,10 @@ Current main research question:
 
 > Can a learner use uncertainty and safety information to request targeted data from an existing controller in poorly covered, safety-critical regions, and can that targeted data improve a subsequent offline policy more effectively than the same amount of randomly collected expert data?
 
-The immediate next design review concerns the physical-model consistency of the
-authoritative drilling reference and error equations. The long-term learning
-question remains, but Experiment 11A's reproducible reduced map does not settle
-physical consistency or bounded-input safety. Experiment 09's certificates apply
+Any next design review must address the unresolved physical reference and
+contact/reaction conventions, separately from the missing actuator contract.
+The long-term learning question remains, but Experiments 11A–11B establish
+numerical properties rather than physical-plant validation or bounded-input
+safety. Experiment 09's certificates apply
 to its declared Pendulum model; they do not transfer to drilling, supply action
 alternatives, justify an offline-RL repair, or certify a future learned policy.
