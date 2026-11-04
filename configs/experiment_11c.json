@@ -1,0 +1,31 @@
+{
+  "experiment": "11C_static_constraint_and_reference_pilot",
+  "accepted_11b": "results/drilling_static_audit/approved_static",
+  "native_11a": "results/drilling_reproduction/native_pilot",
+  "output": "results/drilling_constraints/pilot",
+  "snapshots": [
+    {"case": "P5", "index": 0},
+    {"case": "P5", "index": 200000},
+    {"case": "P0", "index": 1000},
+    {"case": "P3", "index": 1000}
+  ],
+  "operator_columns": {"KT": [0, 10], "DT": [10, 20], "surface": [20, 22], "bit_signed": [22, 24], "gravity": [24, 25]},
+  "snapshot_columns": [25, 26, 27, 28],
+  "reference_columns": {"0_seconds": 29, "20_seconds": 30},
+  "precisions_bits": [128, 256],
+  "arithmetic_repetitions": 2,
+  "matrix_relative_tolerance": 1e-10,
+  "algebra_scaled_tolerance": 1e-8,
+  "normalization": "1 m, 1 rad, 1 s, 1 N, 1 N*m; numerical units, not actuator bounds",
+  "conditioning_scalings": ["original_SI", "existing_axial_times_1000"],
+  "rank_threshold": "max(shape)*binary64_eps*largest_singular_value; diagnostic only",
+  "workers": 1,
+  "cpu_seconds_cap": 1800,
+  "rss_bytes_cap": 2147483648,
+  "new_trajectories": 0,
+  "controller_calls": 0,
+  "physical_model_changed": false,
+  "force_contract": "Four snapshots use the saved full force vector and saved U1_global displacement/velocity, not a regenerated controller. Reference uses IC+Vs*t and the frozen initial nominal force vector. Primitive reassembly reconstructs operator gravity/mappings independently; nominal mapping-rounding differences are reported.",
+  "zero_rule": "Exact rational zero or analytic identity with validated solves; interval overlap alone is unresolved.",
+  "stop_conditions": ["provenance mismatch", "unexplained coordinate/load mismatch", "singular or unresolved solve at approved precision", "reconstruction or algebra tolerance failure", "CPU/RSS cap"]
+}

@@ -2,7 +2,7 @@
 
 ## Current stage
 
-Experiments 01–05, 06A, 07–10 and 11A–11B are complete and scientifically reviewed.
+Experiments 01–05, 06A, 07–10 and 11A–11C are complete and scientifically reviewed.
 Experiment 06/IQL remains unfinished: its full ten-seed study was not launched.
 Experiment 11 Gate 0 passed provenance review, but physically bounded-actuator
 benchmark selection remains BLOCKED by missing engineering specifications.
@@ -10,8 +10,12 @@ The separately approved Experiment 11A reproduced six native ideal-input drillin
 cases; it did not establish physical-reference consistency or bounded-input safety.
 Experiment 11B confirms nonzero reference residuals for the archived numerical
 model beyond tested rounding/assembly effects. Physical contact/reaction assumptions
-remain unresolved. Any next physical-model investigation needs separate design
-review. No compensation, dynamics change, actuator limits, controller redesign,
+remain unresolved. Experiment 11C confirms supplied-force incompatibility and
+conditional ideal-reaction consistency without validating a physical plant.
+Further physical drilling-model development and numerical investigation are
+paused pending external model/engineering clarification and a new reviewed design.
+Frozen-result reproduction is verification only. No compensation, dynamics change,
+actuator limits, controller redesign,
 integration refinement, RL training or IQL resumption is authorized here.
 
 The long-term objective remains safe learning with active expert-data acquisition.
@@ -48,6 +52,7 @@ and whether an initial state admits any safe control sequence.
 | 10: safe policy improvement | LQR mean-return gain +0.056165740 (4.10%), below the frozen +0.136939167 threshold; 0/3,331 violations, 6.43% more squared-torque effort. No tested controller passed any practical improvement criterion. Tracking-oracle gain over matched LQR was only +0.000007367 across 64 states. | [Report](docs/experiment_10_report.md); commit reference in [decision log](docs/RESEARCH_DECISION_LOG.md) |
 | 11A: native drilling reproduction | Six original/repeat pairs (12 executions) matched 85 numeric fields bitwise. Five cases were sampled-safe; P3 had 401 rotational/358 axial violating samples and 411 lookup failures. Nonzero physical-reference residuals limit interpretation. | [Report](docs/experiment_11a_report.md); commit reference in [decision log](docs/RESEARCH_DECISION_LOG.md) |
 | 11B: static reference audit | Exact-rational and 128/256-bit interval checks confirm both reference identities fail for the archived model. Omitted forcing is approximately −0.152400579 rad/s² at 20 s; it is an equation discrepancy, not trajectory drift. Physical constrained reduction remains unresolved. | [Report](docs/experiment_11b_report.md); [reproduction](docs/experiment_11b_reproduction.md) |
+| 11C: constraint/reference pilot | Four snapshots and all five operator groups reject unreacted full-force compatibility. Ideal-reaction, virtual-work and block equations agree conditionally, with nonzero retained reaction effects. The affine reference fails under both formulations; physical applicability remains unresolved. | [Report](docs/experiment_11c_report.md); [reproduction](docs/experiment_11c_reproduction.md) |
 
 Experiment 04 uses paired seeds 42–51; Experiment 05 uses 52–61. Reported intervals
 are seed-bootstrap intervals conditional on each study's fixed evaluation set.
@@ -243,6 +248,54 @@ trajectory or controller was executed. Numerical-model validation does not valid
 the physical drilling plant. Preserve the original idealized map; residual
 compensation and physical-controller redesign are not justified by this audit alone.
 
+## Experiment 11C: physical development paused pending external clarification
+
+Only P5 at indices 0/200000 and P0/P3 at index 1000 were used. Exact arithmetic
+and 128/256-bit directed rounding checked 25 fixed operator columns, the four
+snapshots and two reference states. The five operator groups (KT, DT, surface
+inputs, signed bit loads and gravity) all contain nonzero `C*M^-1*w` witnesses.
+Ideal reactions affect retained accelerations in all four snapshots; the largest
+retained angular effect was 82.850353 rad/s² at P3's saved 0.1 s state. These are
+static equation comparisons, not simulated or measured trajectory changes.
+
+Coordinate enforcement passes: `U=Tq` and `CT=0` preserve geometric coordinates
+by construction. The incompatibility is between that embedded motion and the
+supplied full mechanical force balance without additional forces. It must not be
+reported as an observed geometric escape. Exact reaction-Schur, virtual-work and
+full block equations agree for all 31 RHS columns under fixed ideal bilateral
+constraint assumptions. This is conditional mathematical consistency, not proof
+that those reactions describe drilling contact.
+
+The archived affine reference fails under both tested formulations. The native
+dominant forcing at 20 s remains about −0.152400579 rad/s²; the ideal formulation
+already has a maximum retained translational balance of 0.408512575 m/s² at
+reference time zero. Neither is an integrated deviation. The approximately 14.07%
+relative Frobenius matrix comparison remains coordinate-dependent and is not a
+measured physical modeling error or evidence that the alternative is correct.
+
+The reviewed pilot passed 35 mathematical/provenance tests, identical repeats at
+all three arithmetic settings, 3,100 independent interval residual checks and
+950 cross-precision overlaps. Finalization adds the full regression suite and a
+clean-export replay without altering the accepted records. See the report and
+reproduction guide above. No original equation, input, reference or controller
+was changed, and no new trajectory was executed.
+
+Physical applicability and actual plant invalidity both remain unresolved. Obtain
+external clarification of all five outstanding contracts before further work:
+
+- Constraint reactions and friction, including which effects are already included.
+- Rotational coordinates and work-conjugate torque conventions.
+- Material versus spatial coordinates and frozen/moving wellbore geometry.
+- Boundary conditions, stress-free geometry/preload, cyclic modes and reference construction.
+- Physically admissible absolute surface force/torque limits, correction channels,
+  and any documented rate/slew restrictions; nominal values and peaks are not limits.
+
+Preserve the original ideal-input numerical error-map benchmark with qualified
+safety claims. Experiments 11A–11C establish reproducibility and specific numerical
+inconsistencies, not a validated physical drilling plant. No further numerical
+drilling investigation, residual compensation or controller redesign is authorized
+without new external evidence and scientific review.
+
 ## Experiment 06/IQL remains unfinished
 
 The seed-41 expanded-data critic diverged. Freezing 138 safety-stopped continuation
@@ -256,7 +309,7 @@ The deterministic PD datasets lack direct counterfactual actions at identical
 states. Greater state coverage does not establish action coverage or supported
 improvement beyond the teacher. Advantage weighting can reweight imitation;
 it does not supply missing counterfactual evidence. IQL source/config/test/report
-files remain untracked and excluded from Experiment 11B finalization. All local
+files remain untracked and excluded from Experiment 11C finalization. All local
 pilot/diagnostic artifacts are preserved under `results/offline_rl/`.
 
 ## Handoff and preservation
@@ -266,13 +319,19 @@ Read [RESEARCH_CONTEXT.md](RESEARCH_CONTEXT.md), the
 proposing further work. Do not restart completed experiments or tune methods using
 reviewed results. No next experiment is authorized by this status update.
 
-- Latest implementation: `src/drilling_reproduction.py`, `src/drilling_numerical_audit.py`,
+- Latest implementation: `src/drilling_constraint_*.py`, frozen
+  `configs/experiment_11c.json`, and `requirements_experiment_11c.txt`.
+  Read-only finalization uses `experiments/11c_verify_constraints.py`; the historical
+  pilot entry point is `experiments/11c_constraint_audit.py`. Accepted results are
+  `results/drilling_constraints/pilot/`; finalization evidence is separate under
+  `results/drilling_constraints/finalization/`. No IQL code is a dependency.
+- Preserved 11A implementation: `src/drilling_reproduction.py`, `src/drilling_numerical_audit.py`,
   `src/drilling_pilot_verification.py` and `src/matlab/e11a_*.m`. Entry point:
   `experiments/11a_native_drilling.py`; configuration: `configs/experiment_11a.json`;
   dependencies: `requirements_experiment_11a.txt`. Frozen native execution files
   retain their original hashes. Additive read-only verification uses
   `experiments/11a_verify_native.py`; tests: `tests/test_drilling*.py`.
-- Latest saved evidence: `results/drilling_reproduction/native_pilot/`;
+- Preserved 11A evidence: `results/drilling_reproduction/native_pilot/`;
   all 12 native workspaces, histories, source snapshots, audits and original
   completion markers remain unchanged and outside Git. Finalization audits are
   separate, under `results/drilling_reproduction/finalization/`.

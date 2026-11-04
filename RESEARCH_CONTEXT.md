@@ -63,7 +63,10 @@ nonzero physical-reference balance terms omitted from the implemented error map.
 Its zero-error technical trajectory is not proof of an exact physical reference
 trajectory. Experiment 11B confirms numerical reference inconsistency beyond the
 tested rounding/assembly effects, while physical contact/reaction assumptions
-remain unresolved; see section 11 before making model-specific safety claims.
+remain unresolved. Experiment 11C separates enforced geometry from incompatible
+supplied full-force balance and confirms conditional ideal-reaction mathematics.
+Physical development is paused pending external clarification; see section 11
+before making model-specific safety claims.
 
 ## 3. Drilling safety constraints
 
@@ -375,9 +378,9 @@ Interpretation:
 - it does not cover critical regions
 - this is the desired setup for testing active targeted data acquisition
 
-## 11. Evidence through Experiment 11B
+## 11. Evidence through Experiment 11C
 
-Experiments 01–05, 06A, 07–10 and 11A–11B are complete and scientifically reviewed.
+Experiments 01–05, 06A, 07–10 and 11A–11C are complete and scientifically reviewed.
 Experiment 06/IQL is unfinished. The chronological questions, evidence, decisions,
 and commit/report references are in [docs/RESEARCH_DECISION_LOG.md](docs/RESEARCH_DECISION_LOG.md).
 [CURRENT_STATUS.md](CURRENT_STATUS.md) is the immediate handoff; this section
@@ -551,13 +554,51 @@ a controller. A separately reviewed physical-reference/contact investigation and
 a sourced engineering actuator contract are both still required before physically
 bounded drilling safe-RL development. No next investigation is implemented here.
 
+Experiment 11C used only the frozen P5 snapshots at indices 0/200000 and P0/P3
+at index 1000. Exact rational and 128/256-bit interval calculations tested KT, DT,
+surface/bit mappings and gravity before interpreting the four snapshots. All five
+operator groups and four snapshots have nonzero unreacted acceleration
+compatibility terms. Ideal normal reactions generally alter retained accelerations
+(maximum saved angular effect 82.850353 rad/s² at P3, 0.1 s). These are static
+evaluations, not trajectory deviations or physical measurements.
+
+The native coordinate embedding `U=Tq` enforces `CU=0`; the finding is not a
+geometric escape of the reconstructed coordinates. Its supplied full mechanical
+force balance is inconsistent without additional forces. Conditional ideal-reaction,
+virtual-work and full-block formulations agree exactly for all 31 RHS columns.
+The independent checker verified block uniqueness, virtual work, 3,100 interval
+scalar residuals and 950 cross-precision overlaps. The pilot passed 35 tests and
+identical arithmetic repeats; finalization checks full regressions and clean-export
+reproduction separately. No model replacement or new trajectory was executed.
+
+Both tested formulations reject the unchanged affine reference under the archived
+nominal inputs. The native dominant 20 s balance remains −0.152400579 rad/s²;
+the ideal interpretation has a maximum retained translational balance of
+0.408512575 m/s² already at time zero. The approximately 14.07% relative Frobenius
+matrix difference remains coordinate-dependent, not measured physical error.
+Neither formulation has been validated as the physical drilling plant.
+
+Pause further physical drilling-model development and numerical investigations
+until external model/engineering clarification is obtained and a new scientific
+design is reviewed. Required information is: reaction/friction closure; rotational
+coordinates and work-conjugate torques; material/spatial mesh and wellbore geometry;
+boundary conditions, stress-free geometry/preload and reference/cyclic-mode
+construction; and physically admissible surface force/torque limits, including
+absolute versus correction channels and any documented rate restrictions. Nominal
+inputs and observed peaks provide no actuator contract. Do not infer actual plant
+invalidity from these fixed numerical counterexamples, substitute the conventional
+reduction, or compensate the residuals automatically. Retain the original MATLAB
+error map only as an explicitly ideal-input methodological benchmark. Experiments
+11A–11C established numerical reproducibility and specific mathematical failures;
+physical-plant validation remains absent. No new drilling investigation is approved.
+
 Reports: [04](docs/experiment_04_report.md), [05](docs/experiment_05_report.md),
 [06A](docs/experiment_06a_report.md), [07](docs/experiment_07_report.md),
 [08](docs/experiment_08_report.md), [09](docs/experiment_09_report.md),
 [10](docs/experiment_10_report.md), [11A](docs/experiment_11a_report.md),
-[11B](docs/experiment_11b_report.md).
+[11B](docs/experiment_11b_report.md), [11C](docs/experiment_11c_report.md).
 IQL diagnostics remain local and uncommitted
-under `results/offline_rl/`; they are not part of the completed Experiment 11B implementation.
+under `results/offline_rl/`; they are not part of the completed Experiment 11C implementation.
 
 ## 12. Current repository and reproducibility
 
@@ -615,6 +656,14 @@ from a clean code export with an explicit scientific-data root. It requires the
 accepted 11A/11B archives and sourced authority, not unfinished IQL code or a
 MATLAB license. See [Experiment 11B reproduction](docs/experiment_11b_reproduction.md).
 
+Experiment 11C adds four-snapshot static constraint/reaction analysis and the
+read-only `experiments/11c_verify_constraints.py` finalization entry point. Accepted
+records remain immutable under `results/drilling_constraints/pilot/`; new replay
+records and accepted-source snapshots are separate. Exact rational, 128/256-bit,
+operator/snapshot, rank and hypothesis outputs are retained outside Git. A clean
+source export uses an explicit original scientific-data root and imports no IQL
+code. See [Experiment 11C reproduction](docs/experiment_11c_reproduction.md).
+
 Earlier expert-map and D0 benchmark definitions remain unchanged. Their
 observation-derived wrapped-angle/pre-action safety measurements must not be
 silently equated with later full-horizon raw-state checks. Preserve source,
@@ -649,9 +698,11 @@ Current main research question:
 
 > Can a learner use uncertainty and safety information to request targeted data from an existing controller in poorly covered, safety-critical regions, and can that targeted data improve a subsequent offline policy more effectively than the same amount of randomly collected expert data?
 
-Any next design review must address the unresolved physical reference and
-contact/reaction conventions, separately from the missing actuator contract.
-The long-term learning question remains, but Experiments 11A–11B establish
+Physical drilling development and further numerical investigation are paused
+pending external engineering/model clarification. A later design review must
+address the unresolved reference/contact conventions and the missing actuator
+contract before any new numerical study. The long-term learning question remains,
+but Experiments 11A–11C establish
 numerical properties rather than physical-plant validation or bounded-input
 safety. Experiment 09's certificates apply
 to its declared Pendulum model; they do not transfer to drilling, supply action
