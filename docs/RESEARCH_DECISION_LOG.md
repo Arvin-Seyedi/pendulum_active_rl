@@ -1,4 +1,4 @@
-# Research Decision Log — Experiments 01–11B
+# Research Decision Log — Experiments 01–11C
 
 This retrospective log records the evidence and decisions in experiment order.
 Commit references identify versioned milestones, not experiment execution or
@@ -450,3 +450,75 @@ not authorization to start another experiment.
   [clean-export verification](../results/drilling_static_audit/finalization/clean_export_verification.json);
   Experiment 11B commit:
   [f2b0696](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/f2b0696269693cca98f263de8bdf97aedf2e7824).
+
+## 11C — Separate enforced geometry from mechanical closure; pause physical development
+
+- **Question / previous understanding:** Experiment 11A reproduced the native
+  ideal-input error map bitwise; 11B confirmed nonzero reference-balance terms
+  beyond tested rounding/assembly effects. Neither established whether the
+  mechanical projection or reference followed from a closed physical drilling
+  model. Experiment 11C was approved only as a static mathematical pilot on
+  P5 indices **0/200000** and P0/P3 index **1000**, with unchanged matrices,
+  inputs, reference and 128/256-bit arithmetic settings.
+- **New evidence:** All five fixed operator groups (KT, DT, surface mapping,
+  signed bit-load mapping and gravity) and all four snapshots have validated
+  nonzero `C*M^-1*w` witnesses without additional reactions. Ideal reactions
+  have nonzero retained-acceleration effects in every snapshot; the largest
+  saved angular effect is **82.850353 rad/s²** at P3's 0.1 s state. These are
+  static equation comparisons, not integrated or measured trajectory deviations.
+- **Essential distinction:** The native embedding `U=Tq` enforces geometric
+  coordinates through `CT=0`; this is **not an observed geometric escape**.
+  What fails is compatibility between that embedded motion and the supplied
+  full mechanical force balance. Preserving its retained acceleration would
+  generally require extra forces with nonzero virtual work. Under fixed ideal
+  bilateral constraints, reaction-Schur, virtual-work and full-block formulations
+  agree exactly for **31 RHS columns**, with a unique block solution and
+  independent interval/LDL checks. This establishes conditional mathematical
+  consistency, not that these ideal reactions represent actual drilling contact.
+- **Reference and numerical limitations:** The archived affine reference fails
+  under both tested formulations without changing IC, Vs or nominal inputs.
+  The native dominant balance at 20 s remains approximately **−0.152400579
+  rad/s²**; the ideal interpretation already has a maximum retained translational
+  balance of **0.408512575 m/s²** at reference time zero. Neither is a trajectory
+  deviation or evidence of physical controller instability. The approximately
+  **14.07%** relative Frobenius stiffness-matrix comparison is coordinate-dependent,
+  not measured physical modeling error and not a reason to select the conventional
+  reduction. Literal dyadic rank, numerical rank and structured-real energy/mode
+  statements remain distinct; the latter do not establish physical cyclic modes.
+- **Scientific decision / reason:** Experiments **11A–11C establish numerical
+  reproducibility and specific mathematical inconsistencies, not validation of a
+  physical drilling plant**. Physical applicability of ideal reactions and actual
+  plant invalidity remain unresolved. Preserve the original MATLAB error map as
+  an explicitly ideal-input methodological benchmark, with safety claims confined
+  to its implemented equations. Pause further physical drilling-model development
+  and new numerical drilling investigations pending external model/engineering
+  evidence and a separately reviewed design. Do not automatically substitute a
+  reduction, insert compensation, construct a new reference, redesign a controller
+  or invent actuator limits. Frozen-result replay is verification, not a new study.
+- **External information required:** Obtain the original author's reaction and
+  friction closure, including effects already represented in the load vector;
+  rotational-coordinate and work-conjugate torque conventions; material versus
+  spatial coordinates and wellbore geometry; support/boundary conditions,
+  stress-free geometry/preload and reference/cyclic-mode/gauge construction; and
+  physically admissible absolute surface force/torque limits, correction-channel
+  meaning and any documented rate restrictions. Nominal commands and observed
+  peaks provide no actuator contract. Engineering/author clarification is needed
+  before any further physical numerical investigation, not another arbitrary fix.
+- **Verification / preservation / sources:** All **35 reviewed pilot tests**
+  passed, with identical arithmetic repeats. Finalization passed **122 applicable
+  regression tests in both workspace and clean export**. Replay reproduced all
+  four original/repeat snapshot pairs, exact arithmetic, both interval endpoint
+  sets, five operator groups and all scientific classifications. Independent
+  checks verified **3,100 interval residuals and 950 cross-precision overlaps**,
+  plus exact block uniqueness and the coordinate/missing-force identity. Accepted
+  reports, source snapshots and generated records remain unchanged; preservation
+  covers 53,435 historical files, 87 authority files and all nine unchanged IQL
+  files. IQL remains unfinished and unimported; no RL training or new expert data
+  was authorized. No new MATLAB process, trajectory or physical model was executed.
+  See [scientific report](experiment_11c_report.md),
+  [reproduction and read-only checks](experiment_11c_reproduction.md),
+  [accepted review seal](../results/drilling_constraints/pilot/review_integrity.json),
+  [workspace replay](../results/drilling_constraints/finalization/workspace_verification.json),
+  [clean-export replay](../results/drilling_constraints/finalization/clean_export_verification.json);
+  Experiment 11C commit:
+  [024bec5](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/024bec5ae66e11298ae7a07a6bc07f33b12e1dfd).
