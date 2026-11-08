@@ -6,6 +6,8 @@ Experiments 01–05, 06A, 07–10 and 11A–11C are complete and scientifically 
 Experiment 12's reviewed pilot/diagnostic/qualification milestone is complete;
 **overall benchmark qualification remains FAILED**. The targeted H2/MPC20 v2
 requalification passes without changing any historical outcome or threshold.
+The separately reviewed **E12_MPC80_FEAS_v2 scoped expert-feasibility gate PASSED**
+on all sixteen frozen states; it does not supersede either failed benchmark gate.
 Experiment 06/IQL remains unfinished: its full ten-seed study was not launched.
 Experiment 11 Gate 0 passed provenance review, but physically bounded-actuator
 benchmark selection remains BLOCKED by missing engineering specifications.
@@ -336,12 +338,46 @@ frequently exceeded it in archived kernel timing. Offline simulation success is
 not hard real-time readiness. Overall benchmark qualification remains failed;
 successful sampled executions are neither formal nor hardware safety guarantees.
 
-The conservative remaining allowance is **12,970 solver calls and 948,000 physics
-steps**. Finalization is read-only. No sixteen-state screening, action probes,
-new control evaluations or learning runs were performed. A limited, prospectively
-defined **MPC80-only simulation-expert feasibility study** is proposed for separate
-design/budget review, rather than open-ended baseline debugging. It is not yet
-authorized or implemented, and safe-action support/acquisition benefit remain untested.
+At the earlier qualification milestone the balance was 12,970 solves / 948,000
+physics steps. The following scoped feasibility study is now accepted separately.
+
+### Accepted MPC80-only feasibility milestone
+
+E12_MPC80_FEAS_v1 remains **FAILED** at its first physics callback: one actual
+solve/step, zero complete controls. Reading the stale reset command cache was an
+instrumentation defect, not demonstrated applied-thrust infeasibility. Its full
+300-solve / 6,000-step failed reservation remains charged. The separately sealed
+v2 observer records current native RPM and submitted force/torque arguments;
+KF-derived thrust is not hardware telemetry. Historical v1 evidence was not repaired.
+
+**V2 passed 16/16 states, 32/32 scientific executions and 64/64 independent
+replays**, with bitwise repetitions and replay agreement. Each scientific run
+contains 300 controls and all 6,001 raw states. All **9,600 optimization candidates**
+passed unchanged native and corrected-v2 independent checks. No observed raw
+state/input violations or contacts occurred; every numerical reserve was positive.
+Mean/worst original return: **−20.241625399 / −78.787551231**; position RMSE:
+**0.087969885 / 0.197426305 m**; squared-thrust effort:
+**0.228677863 / 0.242540074 N²s**. Minimum normalized raw margin: **0.0756528087895**.
+All six componentwise raw margins and causal reserves are in the
+[accepted scientific report](docs/experiment_12_mpc80_feas_v2_report.md).
+
+Maximum prediction disagreement is **0.0189680501631**, so the original **0.001**
+gate remains **FAILED**. Source-recurrence closure is at most 3.552714e−15; this
+supports numerical reconstruction, not exact symbolic/plant equivalence or a
+formal robust safety theorem. All **9,600/9,600** native-action latency estimates
+exceeded 20 ms (median 24.337480 ms; maximum 309.950500 ms). The accepted scope is
+finite-cohort offline simulation-expert feasibility, not hard real-time readiness,
+physical flight safety, reward optimality, safe action diversity or learning benefit.
+
+V2 charged 9,600 solves / 576,000 physics steps. **Remaining original allowance:
+3,070 solves / 366,000 physics steps**, with no failed reservation refunded.
+The accepted execution ledger carries 1,501.732 CPU / 1,730.196 active-wall seconds,
+including v1/preflights/record audit; additive finalization overhead is recorded
+separately without rewriting that ledger. These sixteen states remain development/
+qualification data, never independent held-out learned-policy evaluation data.
+No action probes or learning runs have occurred. A safe-action diversity design
+requires separate execution/budget approval. [Read-only reproduction and
+finalization checks](docs/experiment_12_mpc80_reproduction.md).
 
 ## Experiment 06/IQL remains unfinished
 

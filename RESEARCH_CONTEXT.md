@@ -382,7 +382,8 @@ Interpretation:
 
 Experiments 01–05, 06A, 07–10 and 11A–11C are complete and scientifically reviewed.
 Experiment 12's reviewed numerical-qualification milestone is finalized;
-its **overall benchmark qualification remains FAILED**.
+its **overall benchmark qualification remains FAILED**. The separately accepted
+MPC80_FEAS_v2 study passes its sixteen-state offline expert-feasibility scope only.
 Experiment 06/IQL is unfinished. The chronological questions, evidence, decisions,
 and commit/report references are in [docs/RESEARCH_DECISION_LOG.md](docs/RESEARCH_DECISION_LOG.md).
 [CURRENT_STATUS.md](CURRENT_STATUS.md) is the immediate handoff; this section
@@ -628,14 +629,39 @@ failed vectors are explicit; v2 preserves available failure candidates, residual
 nonfinite data, timing and partial histories without fallback control. H2 has two
 solver-only 20-ms overruns; all supervised callbacks overrun, and MPC80's archived
 kernel times often exceed 20 ms. Offline simulation feasibility is separate from
-hard real-time readiness. The conservative remaining allowance is **12,970 solves
-and 948,000 physics steps**; no screening, action probes or training have run.
+hard real-time readiness. That milestone left 12,970 solves / 948,000 physics
+steps, before the separately reviewed MPC80 feasibility sequence.
 
-The next proposed review is a **limited, prospectively frozen MPC80-only expert
-feasibility study**, not continued open-ended baseline debugging. Its scope and
-budget require separate approval. Successful controller execution is insufficient
-for action-support, safe-continuation, learning-headroom or acquisition-benefit
-claims. Physically bounded drilling development and unfinished IQL remain paused.
+MPC80_FEAS_v1 stopped after one actual solve and one physics step due to reading
+the stale reset command cache. Preserve its FAILED classification and full failed
+300-solve / 6,000-step reservation; this is not evidence of real thrust infeasibility.
+Separately versioned v2 records current native motor/force submission arguments
+without changing the expert or plant. Grouped thrust is derived, not physical sensing.
+V2 passed **16/16 original frozen states, 32/32 scientific executions, 64/64 replays
+and 9,600 independently checked candidates**. All scientific repetitions and
+replays matched bitwise, with zero observed state/input violations or contacts,
+all 6,001 raw states/run checked and strictly positive causal numerical reserves.
+
+Across sixteen originals, mean/worst return is **−20.241625399 / −78.787551231**,
+position RMSE **0.087969885 / 0.197426305 m**, and squared-thrust effort
+**0.228677863 / 0.242540074 N²s**. Minimum normalized raw margin is
+**0.0756528087895**. Maximum one-control-step prediction disagreement remains
+**0.0189680501631**; neither the original failed **0.001** test nor failed overall
+benchmark gate is superseded. All **9,600** native-action estimates exceeded 20 ms
+(median 24.337480, maximum 309.950500 ms): offline feasibility is distinct from
+hard real-time readiness. Numerical reserves are not formal robust/hardware guarantees.
+
+Remaining original allowance is **3,070 solves / 366,000 physics steps** after v2's
+9,600 / 576,000 and the unchanged v1 failed reservation. The accepted ledger retains
+1,501.732 CPU / 1,730.196 active-wall seconds; finalization overhead is additive,
+not a reset. These sixteen states are qualification/development data. New learned
+policies need fresh independent evaluation with reference phase/preview and relevant
+controller/simulator history represented. Demonstration variability cannot establish
+counterfactual action support. Safe-action diversity is the next design question;
+its execution and any enlarged budget require separate approval. No action probes,
+training or IQL resumption are authorized by this milestone. Physical drilling
+work and unfinished IQL remain paused. See the [accepted MPC80 report](docs/experiment_12_mpc80_feas_v2_report.md)
+and [read-only reproduction](docs/experiment_12_mpc80_reproduction.md).
 
 Reports: [04](docs/experiment_04_report.md), [05](docs/experiment_05_report.md),
 [06A](docs/experiment_06a_report.md), [07](docs/experiment_07_report.md),
