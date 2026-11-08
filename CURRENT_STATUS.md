@@ -3,6 +3,9 @@
 ## Current stage
 
 Experiments 01–05, 06A, 07–10 and 11A–11C are complete and scientifically reviewed.
+Experiment 12's reviewed pilot/diagnostic/qualification milestone is complete;
+**overall benchmark qualification remains FAILED**. The targeted H2/MPC20 v2
+requalification passes without changing any historical outcome or threshold.
 Experiment 06/IQL remains unfinished: its full ten-seed study was not launched.
 Experiment 11 Gate 0 passed provenance review, but physically bounded-actuator
 benchmark selection remains BLOCKED by missing engineering specifications.
@@ -53,6 +56,7 @@ and whether an initial state admits any safe control sequence.
 | 11A: native drilling reproduction | Six original/repeat pairs (12 executions) matched 85 numeric fields bitwise. Five cases were sampled-safe; P3 had 401 rotational/358 axial violating samples and 411 lookup failures. Nonzero physical-reference residuals limit interpretation. | [Report](docs/experiment_11a_report.md); commit reference in [decision log](docs/RESEARCH_DECISION_LOG.md) |
 | 11B: static reference audit | Exact-rational and 128/256-bit interval checks confirm both reference identities fail for the archived model. Omitted forcing is approximately −0.152400579 rad/s² at 20 s; it is an equation discrepancy, not trajectory drift. Physical constrained reduction remains unresolved. | [Report](docs/experiment_11b_report.md); [reproduction](docs/experiment_11b_reproduction.md) |
 | 11C: constraint/reference pilot | Four snapshots and all five operator groups reject unreacted full-force compatibility. Ideal-reaction, virtual-work and block equations agree conditionally, with nonzero retained reaction effects. The affine reference fails under both formulations; physical applicability remains unresolved. | [Report](docs/experiment_11c_report.md); [reproduction](docs/experiment_11c_reproduction.md) |
+| 12: quadrotor numerical qualification | Native linear dispatch and original 0.001 symbolic/plant agreement fail. Adapted linear pilot succeeds, but held-out QRQP failures remain. NMPC40/80 complete all four held-out cases safely; new H2/MPC20 v2 runs complete twice and pass corrected KKT checks. Overall qualification remains failed. | [Consolidated report](docs/experiment_12_report.md); [finalization reproduction](docs/experiment_12_finalization.md) |
 
 Experiment 04 uses paired seeds 42–51; Experiment 05 uses 52–61. Reported intervals
 are seed-bootstrap intervals conditional on each study's fixed evaluation set.
@@ -296,6 +300,49 @@ inconsistencies, not a validated physical drilling plant. No further numerical
 drilling investigation, residual compensation or controller redesign is authorized
 without new external evidence and scientific review.
 
+## Experiment 12: completed evidence, failed overall qualification
+
+The published six-second planar-quadrotor figure-eight task is frozen at
+safe-control-gym `6b5391d014f36fdfa0f9d22d92c77387e5274308`, with 50-Hz control,
+1,000-Hz physics and unchanged model, constraints, objectives and MPC horizons.
+Initial four-case evidence, refinement, diagnostic, versioned QRQP adapter,
+held-out MMAQ_v1, integrity audit and targeted H2 v2 records remain separate.
+The native Darwin conic/IPOPT dispatch failure remains a software outcome.
+The adapter changes dispatch/options only, not the control problem.
+
+The original **0.001** symbolic/PyBullet agreement gate remains **FAILED**.
+Model-mismatch-aware checks do not establish exact model equivalence or a general
+floating-point safety guarantee. NMPC40/80 completed all four held-out cases twice
+without observed state/input violations or contacts; NMPC80 mean/worst returns
+were −39.331860180/−65.816857638, minimum normalized raw margin 0.200745220.
+Adapted linear H0/H2 remain incomplete. H0 cycles to QRQP's 1,000-iteration limit;
+H2's trace ends at iteration 12 with a singular/regularity-loss failure, not a
+proved infeasibility or demonstrated iteration-limit event. Missing failed
+vectors/latencies cannot be recovered retrospectively.
+
+The v2 KKT verifier corrects absent-side complementarity, sign and nonfinite
+handling without changing numerical tolerances. The new H2/MPC20 runs both
+complete **300 controls and 6,001 raw states**, with zero observed violations,
+bitwise repetitions/action replays and **300 checked candidates each**. Return
+is −25.138729807869687, minimum normalized raw margin 0.2699882352585654.
+The first 54 historical controls/candidates match bitwise; the v1 defect is
+reproduced on the **newly captured step-54 candidate**, not on a recovered old
+rejection vector. Historical v1 runs remain incomplete with that vector absent.
+Future v2 capture records failures/nonfinite data explicitly and applies no fallback.
+
+Solver-only H2 median/p95/p99/max latency was 7.187/11.802/12.889/72.745 ms,
+with two 20-ms overruns. All 600 supervised calls exceeded 20 ms; MPC80 also
+frequently exceeded it in archived kernel timing. Offline simulation success is
+not hard real-time readiness. Overall benchmark qualification remains failed;
+successful sampled executions are neither formal nor hardware safety guarantees.
+
+The conservative remaining allowance is **12,970 solver calls and 948,000 physics
+steps**. Finalization is read-only. No sixteen-state screening, action probes,
+new control evaluations or learning runs were performed. A limited, prospectively
+defined **MPC80-only simulation-expert feasibility study** is proposed for separate
+design/budget review, rather than open-ended baseline debugging. It is not yet
+authorized or implemented, and safe-action support/acquisition benefit remain untested.
+
 ## Experiment 06/IQL remains unfinished
 
 The seed-41 expanded-data critic diverged. Freezing 138 safety-stopped continuation
@@ -309,7 +356,7 @@ The deterministic PD datasets lack direct counterfactual actions at identical
 states. Greater state coverage does not establish action coverage or supported
 improvement beyond the teacher. Advantage weighting can reweight imitation;
 it does not supply missing counterfactual evidence. IQL source/config/test/report
-files remain untracked and excluded from Experiment 11C finalization. All local
+files remain untracked and excluded from Experiment 12 finalization. All local
 pilot/diagnostic artifacts are preserved under `results/offline_rl/`.
 
 ## Handoff and preservation
@@ -319,7 +366,13 @@ Read [RESEARCH_CONTEXT.md](RESEARCH_CONTEXT.md), the
 proposing further work. Do not restart completed experiments or tune methods using
 reviewed results. No next experiment is authorized by this status update.
 
-- Latest implementation: `src/drilling_constraint_*.py`, frozen
+- Latest milestone: `src/quadrotor*.py`, separately versioned E12 configurations,
+  `requirements_experiment_12.txt`, historical entry points under `experiments/12_*`
+  and read-only `experiments/12_verify_milestone.py`. Accepted evidence is under
+  `results/benchmark_selection/`; additive finalization evidence is in its
+  `finalization/` folder. [Reproduction](docs/experiment_12_finalization.md).
+  Generated outputs and all nine IQL files are excluded from Git.
+- Preserved 11C implementation: `src/drilling_constraint_*.py`, frozen
   `configs/experiment_11c.json`, and `requirements_experiment_11c.txt`.
   Read-only finalization uses `experiments/11c_verify_constraints.py`; the historical
   pilot entry point is `experiments/11c_constraint_audit.py`. Accepted results are

@@ -1,0 +1,26 @@
+{
+  "version": "E12_qualification_integrity_v2",
+  "scope": "static KKT, retained-record, logging, timing and budget audit only",
+  "accepted_evidence": "results/benchmark_selection/mmaq_v1",
+  "solver_calls_authorized": 0,
+  "new_episodes_authorized": 0,
+  "physics_steps_authorized": 0,
+  "workers": 1,
+  "memory_limit_bytes": 4294967296,
+  "original_agreement_gate": {"threshold": 0.001, "historical_status": "FAILED"},
+  "KKT": {
+    "stationarity_tolerance": 1.01e-8,
+    "normalized_complementarity_tolerance": 1.01e-8,
+    "dual_sign_tolerance": 1.01e-8,
+    "NLP_primal_tolerance": 1e-4,
+    "QP_primal_tolerance": 1.01e-8,
+    "NLP_required_status": "Solve_Succeeded",
+    "bound_reconstruction_tolerance": 1e-10
+  },
+  "QRQP": {"solver_change_authorized": false, "iteration_limit_change_authorized": false},
+  "active_set_diagnostic_tolerance": 1e-7,
+  "additional_full_study_allocation_authorized": false,
+  "run_screening": false,
+  "run_probes": false,
+  "train_agents": false
+}

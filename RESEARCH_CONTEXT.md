@@ -378,9 +378,11 @@ Interpretation:
 - it does not cover critical regions
 - this is the desired setup for testing active targeted data acquisition
 
-## 11. Evidence through Experiment 11C
+## 11. Evidence through Experiment 12
 
 Experiments 01–05, 06A, 07–10 and 11A–11C are complete and scientifically reviewed.
+Experiment 12's reviewed numerical-qualification milestone is finalized;
+its **overall benchmark qualification remains FAILED**.
 Experiment 06/IQL is unfinished. The chronological questions, evidence, decisions,
 and commit/report references are in [docs/RESEARCH_DECISION_LOG.md](docs/RESEARCH_DECISION_LOG.md).
 [CURRENT_STATUS.md](CURRENT_STATUS.md) is the immediate handoff; this section
@@ -592,13 +594,57 @@ error map only as an explicitly ideal-input methodological benchmark. Experiment
 11A–11C established numerical reproducibility and specific mathematical failures;
 physical-plant validation remains absent. No new drilling investigation is approved.
 
+Experiment 12 moved to the published safe-control-gym planar-quadrotor figure-eight
+as a simulation benchmark, keeping the pinned upstream model, objective, constraints
+and horizons. Native linear MPC fails Darwin conic/IPOPT dispatch; separately
+versioned `linear_conic_qrqp_v1` changes only dispatch/backend options. Its original
+four-case revalidation succeeds, but later held-out linear H0/H2 remain incomplete.
+H0 reaches 1,000 QRQP iterations; H2 ends its printed trace at iteration 12 with
+singular/regularity-loss symptoms. These are not infeasibility certificates.
+
+The original **0.001 symbolic/PyBullet agreement criterion remains FAILED**.
+Geometry, motor-link attitude caching, thrust conversion and integration explain
+recorded discrepancies, not a general simulator-error guarantee. The separately
+frozen MMAQ_v1 protocol does not supersede or relabel that historical failure.
+NMPC40/80 complete all four fresh held-out states twice without observed violations.
+NMPC80 mean/worst returns are −39.331860180/−65.816857638; minimum normalized raw
+margin is 0.200745220. This is limited empirical evidence, not benchmark-wide,
+formal, hardware or real-time safety qualification.
+
+The integrity audit identifies a one-sided complementarity defect and nonfinite
+handling defects in the independent v1 verifier. Versioned v2 uses finite-side
+products, explicit dual-sign checks and fail-closed arithmetic with unchanged
+tolerances. All 7,932 retained MMAQ candidates pass corrected checks; the old
+H2/MPC20 rejected vector remains absent. A separately approved targeted v2 run
+completes H2 twice: 300 controls, 6,001 raw states and 300 checked candidates/run,
+zero observed violations/contacts, bitwise repeats and independent action replays.
+Return is −25.138729807869687; minimum normalized raw margin 0.2699882352585654.
+The first 54 retained controls/solver vectors match historical prefixes bitwise.
+The v1 defect is reproduced on a **newly captured step-54 candidate**, not a
+recovered historical rejection vector. Old incomplete outcomes remain unchanged.
+
+The original benchmark gate remains failed. Missing old solver telemetry and
+failed vectors are explicit; v2 preserves available failure candidates, residuals,
+nonfinite data, timing and partial histories without fallback control. H2 has two
+solver-only 20-ms overruns; all supervised callbacks overrun, and MPC80's archived
+kernel times often exceed 20 ms. Offline simulation feasibility is separate from
+hard real-time readiness. The conservative remaining allowance is **12,970 solves
+and 948,000 physics steps**; no screening, action probes or training have run.
+
+The next proposed review is a **limited, prospectively frozen MPC80-only expert
+feasibility study**, not continued open-ended baseline debugging. Its scope and
+budget require separate approval. Successful controller execution is insufficient
+for action-support, safe-continuation, learning-headroom or acquisition-benefit
+claims. Physically bounded drilling development and unfinished IQL remain paused.
+
 Reports: [04](docs/experiment_04_report.md), [05](docs/experiment_05_report.md),
 [06A](docs/experiment_06a_report.md), [07](docs/experiment_07_report.md),
 [08](docs/experiment_08_report.md), [09](docs/experiment_09_report.md),
 [10](docs/experiment_10_report.md), [11A](docs/experiment_11a_report.md),
-[11B](docs/experiment_11b_report.md), [11C](docs/experiment_11c_report.md).
+[11B](docs/experiment_11b_report.md), [11C](docs/experiment_11c_report.md),
+[12 consolidated milestone](docs/experiment_12_report.md).
 IQL diagnostics remain local and uncommitted
-under `results/offline_rl/`; they are not part of the completed Experiment 11C implementation.
+under `results/offline_rl/`; they are not part of the completed Experiment 12 implementation.
 
 ## 12. Current repository and reproducibility
 
@@ -670,6 +716,15 @@ silently equated with later full-horizon raw-state checks. Preserve source,
 configuration and artifact hashes, exact initial-state values, negative findings,
 and unfinished diagnostics. Historical preservation manifests are immutable;
 authorized documentation updates are checked separately.
+
+Experiment 12 adds pinned quadrotor pilot/diagnostic orchestration, the versioned
+linear adapter and independent numerical verification, MMAQ_v1, corrected KKT v2,
+failure telemetry and the narrowly scoped H2 requalification. All accepted sources,
+reports and generated evidence remain immutable; additive milestone verification
+uses `experiments/12_verify_milestone.py` with the original data root. It reconstructs
+saved equations, candidates and replay evidence without a simulator or optimizer.
+Clean export excludes all nine IQL files. See
+[Experiment 12 finalization reproduction](docs/experiment_12_finalization.md).
 
 ## 13. Coding workflow preferences
 

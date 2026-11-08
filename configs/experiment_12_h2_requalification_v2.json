@@ -1,0 +1,31 @@
+{
+  "version": "E12_H2_MPC20_requalification_v2",
+  "case": "H2",
+  "controller": "nonlinear20",
+  "phases": ["original", "repeat"],
+  "frequency": 1000,
+  "controller_frequency": 50,
+  "horizon_seconds": 6,
+  "controls_per_execution": 300,
+  "maximum_additional_solver_calls": 600,
+  "maximum_additional_physics_steps": 36000,
+  "replays_per_execution": 2,
+  "workers": 1,
+  "memory_limit_bytes": 4294967296,
+  "action_watchdog_seconds": 1,
+  "original_symbolic_agreement_threshold": 0.001,
+  "historical_symbolic_agreement_status": "FAILED",
+  "KKT": {
+    "primal_tolerance": 1e-4,
+    "stationarity_tolerance": 1.01e-8,
+    "dual_sign_tolerance": 1.01e-8,
+    "normalized_complementarity_tolerance": 1.01e-8,
+    "reconstruction_tolerance": 1e-10,
+    "required_status": "Solve_Succeeded"
+  },
+  "run_linear_MPC": false,
+  "run_screening": false,
+  "run_probes": false,
+  "train_agents": false,
+  "additional_full_study_allocation_authorized": false
+}
