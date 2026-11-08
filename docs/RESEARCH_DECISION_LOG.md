@@ -1,4 +1,4 @@
-# Research Decision Log — Experiments 01–11C
+# Research Decision Log — Experiments 01–12
 
 This retrospective log records the evidence and decisions in experiment order.
 Commit references identify versioned milestones, not experiment execution or
@@ -522,3 +522,82 @@ not authorization to start another experiment.
   [clean-export replay](../results/drilling_constraints/finalization/clean_export_verification.json);
   Experiment 11C commit:
   [024bec5](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/024bec5ae66e11298ae7a07a6bc07f33b12e1dfd).
+
+## 12 — Preserve failed benchmark qualification; scope the next expert-feasibility question
+
+- **Question / previous understanding:** Pendulum demonstrated little practical
+  improvement headroom under the tested methods; deterministic demonstrations
+  lacked counterfactual action support. Experiments 11A–11C did not validate a
+  physical drilling plant, so that direction remains paused. The published planar
+  quadrotor figure-eight was selected for a reproducible simulation-feasibility
+  assessment, without assuming RL superiority or changing objectives to create it.
+- **New evidence:** The pinned native Darwin linear MPC fails conic/IPOPT
+  dispatch. A separately versioned QRQP adapter preserves the mathematical control
+  problem and completes the four-case pilot safely, but held-out H0/H2 remain
+  incomplete. H0 cycles to 1,000 iterations; H2's printed trace ends at iteration
+  12 on a singular/regularity-loss path. Neither proves infeasibility. Warm-start
+  aliasing is verified, but its causal contribution is unestablished. Historical
+  failed vectors and some full-call timing observations remain unavailable.
+- **Prediction and safety distinction:** The original **0.001 symbolic/PyBullet
+  agreement gate remains FAILED**. Geometry, cached attitude, conversion and
+  integration explain retained discrepancies, not a global floating-point safety
+  theorem. MMAQ_v1 has **26/32 completed executions** and remains failed overall.
+  NMPC40/80 each complete all four held-out cases twice with zero observed
+  violations/contacts. NMPC80 mean/worst returns are **−39.331860180/−65.816857638**,
+  minimum normalized raw margin **0.200745220**; its original maximum scaled model
+  discrepancy remains **0.01326088346**. Empirical finite-horizon execution is
+  neither model equivalence nor formal/hardware safety.
+- **Verifier integrity and new targeted result:** Versioned v2 corrects finite-side
+  complementarity, dual-sign and nonfinite handling with unchanged tolerances.
+  All **7,932** retained MMAQ candidates pass corrected checks, without rewriting
+  incomplete outcomes. The separately approved H2/MPC20 v2 executions both finish
+  **300 controls and 6,001 raw states**, with zero observed violations, bitwise
+  repetitions/action replays and **300 independently checked candidates/run**.
+  Return is **−25.138729807869687**, minimum normalized raw margin
+  **0.2699882352585654**. After bitwise-matched 54-control prefixes, the v1 defect
+  is reproduced on a **newly captured step-54 candidate**; the missing historical
+  rejection vector was not recovered and old full-horizon outcomes remain absent.
+- **Computation and limitations:** H2 solver-only median/p95/p99/max is
+  **7.187/11.802/12.889/72.745 ms**, with **2/600** over 20 ms; supervised calls
+  overrun **600/600**. MPC80 often exceeds 20 ms even in archived kernel timing.
+  Preserve all overruns and missing telemetry; offline simulation does not imply
+  hard real-time readiness. Future v2 failure capture retains available candidates,
+  residuals, nonfinite values and partial records without fallback actions.
+  Remaining conservative allowance is **12,970 solver calls / 948,000 physics
+  steps**. No new full-study allocation or sixteen-state/action-probe execution
+  is authorized by this milestone.
+- **Scientific decision / reason:** Do not continue open-ended baseline debugging
+  or declare the published benchmark fully qualified. Propose a **limited,
+  prospectively defined MPC80-only simulation-expert feasibility study** for
+  separate design and budget review: MPC80 has complete repeated technical and
+  held-out sampled-safety evidence and verified retained numerical candidates,
+  enough to justify a focused question rather than further baseline repairs.
+  This narrows the proposed expert-feasibility scope; it does not establish
+  superiority over other controllers or remove their failed outcomes. Freeze
+  the next cohort, resource/failure accounting and decision criteria in advance.
+  Establish distinct safe alternative actions/continuations and informative data
+  support before any active-versus-random acquisition experiment with equal
+  transition budgets and independent held-out policy evaluation. Learning
+  headroom, sample-efficiency benefit and learned-policy safety remain untested.
+  Drilling development and Experiment 06/IQL remain paused; no new study is
+  implemented or launched here.
+- **Verification / preservation / sources:** **191 applicable regression tests
+  pass in both workspace and clean export**, excluding unfinished IQL.
+  Saved-record audits agree in canonical scientific JSON, checking **106** attempt
+  records, **650,640** physics transitions, **10,932** retained candidates,
+  **51,192** exact majorant components and **168** complete-episode replay records.
+  Preservation checks cover **53,819 historical files, 87 authority files,
+  289 upstream files, 5,438 sealed artifacts, 43 accepted sources and nine IQL
+  hashes**. Generated records stay outside Git; finalization uses zero new solves
+  or physics steps. Prior decision entries remain unchanged. See the
+  [consolidated report](experiment_12_report.md),
+  [read-only reproduction](experiment_12_finalization.md),
+  [original pilot](experiment_12_pilot_report.md),
+  [diagnostic](experiment_12_diagnostic_report.md),
+  [adapter revalidation](experiment_12_linear_revalidation_report.md),
+  [MMAQ_v1](experiment_12_mmaq_v1_report.md),
+  [integrity audit](experiment_12_qualification_integrity_report.md),
+  [H2 v2 report](experiment_12_h2_requalification_v2_report.md) and
+  [clean-export verification](../results/benchmark_selection/finalization/clean_export_comparison.json).
+  Implementation milestone:
+  [a11e36c](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/a11e36c3e34317810f95e64ad8587895b3faef6b).
