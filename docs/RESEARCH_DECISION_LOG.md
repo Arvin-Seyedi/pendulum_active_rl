@@ -601,3 +601,58 @@ not authorization to start another experiment.
   [clean-export verification](../results/benchmark_selection/finalization/clean_export_comparison.json).
   Implementation milestone:
   [a11e36c](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/a11e36c3e34317810f95e64ad8587895b3faef6b).
+
+## 12 — Accept scoped MPC80 expert feasibility; retain failed benchmark qualification
+
+- **Question / previous understanding:** Earlier E12 evidence supported complete
+  MPC80 executions on technical and held-out cases but did not qualify the original
+  four-controller benchmark. The original 0.001 symbolic/PyBullet criterion and
+  overall benchmark qualification remain FAILED; no safe counterfactual actions,
+  learning headroom or active-acquisition benefit had been demonstrated.
+- **New evidence:** The sealed sixteen-state PCG64-120001 cohort completed under
+  unchanged MPC80 in E12_MPC80_FEAS_v2: **16/16 states, 32/32 scientific runs,
+  64/64 replays and 9,600 independently verified candidates**. All 6,001 raw states
+  per run were checked, with zero observed state/input violations or contacts,
+  strictly positive causal reserves, bitwise scientific repeats and replay
+  agreement. Mean/worst original return is **−20.241625399 / −78.787551231**;
+  position RMSE **0.087969885 / 0.197426305 m**; squared-thrust effort
+  **0.228677863 / 0.242540074 N²s**; minimum normalized raw margin
+  **0.0756528087895**.
+- **Negative findings / integrity:** V1 remains FAILED after one actual solve and
+  one physics step because its callback read a stale reset command cache. This
+  was not a demonstrated thrust violation. The separate v2 observer records
+  current motor and force/torque submission arguments without changing native
+  behavior; thrust derived from those arguments is not physical sensing. V1's
+  failed 300-solve / 6,000-step reservation remains charged. Maximum v2 prediction
+  disagreement is **0.0189680501631**: neither failed original gate is superseded.
+  All **9,600** native-action latency estimates exceed 20 ms (median 24.337480 ms,
+  maximum 309.950500 ms); no hard real-time readiness is established.
+- **Interpretation / limits:** Accept finite-cohort offline simulation-expert
+  feasibility only. This is not formal robust/continuous-time/hardware safety,
+  a certified operating region, global optimality or proof of supported policy
+  improvement. The sixteen qualification states cannot become independent
+  held-out learned-policy evaluation data. Demonstration action variation at
+  different states/phases does not establish safe alternatives at identical
+  decision contexts, especially with reference preview and warm-start history.
+- **Scientific decision / reason:** Preserve the scoped positive result and stop
+  open-ended baseline debugging. Review a prospectively specified safe-action
+  diversity study before any execution or learning. Keep the original nine-action
+  menu, four probe IDs, objective and constraints; first establish reproducible
+  matched contexts and independently safe continuations. Beyond-expert RL still
+  needs informative counterfactual action/outcome support. Expert imitation and
+  equal-budget active-versus-random acquisition are separate future questions.
+  Physical drilling development and unfinished IQL remain paused.
+- **Resources / verification / references:** Remaining original allowance is
+  **3,070 solves / 366,000 physics steps**, with no refund/reset. No new execution
+  allocation is granted here. Finalization used zero solves/steps, passed
+  **248 tests in both workspace and clean export**, and reproduced the accepted
+  scientific digest `6ada71395cb84324cad4f6c28638b200b8b82cc52daab188564af895d62a2f6c`.
+  It checked 87,315 sealed v2 files, prior research/authority hashes and all nine
+  unchanged untracked IQL files. A new finalization comparator's ledger-snapshot
+  mismatch was explicitly reconciled against the two recorded audit charges;
+  accepted evidence was not changed. See [accepted report](experiment_12_mpc80_feas_v2_report.md),
+  [v1 failure](experiment_12_mpc80_feas_v1_report.md),
+  [v2 preflight](experiment_12_mpc80_feas_v2_preflight_report.md),
+  [read-only reproduction](experiment_12_mpc80_reproduction.md) and
+  [clean-export comparison](../results/benchmark_selection/mpc80_feas_finalization/clean_export_comparison.json).
+  Implementation milestone: [9848529](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/9848529c4c4cd831af991a7141af4b5cc9eeb892).
