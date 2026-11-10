@@ -11,6 +11,9 @@ on all sixteen frozen states; it does not supersede either failed benchmark gate
 The separately reviewed **Counterfactual Pilot B v2 PASSED** matched-context
 execution fidelity and one empirically safe alternative at ID 0. Its cumulative
 return was worse; full action diversity and practical headroom remain unestablished.
+The separately reviewed **B0 archive-only learner-gap assessment is complete**:
+a supervised gap exists, but its frozen acquisition-readiness decision is
+**NO-GO**. No learned controller was executed or evaluated for safety/return.
 Experiment 06/IQL remains unfinished: its full ten-seed study was not launched.
 Experiment 11 Gate 0 passed provenance review, but physically bounded-actuator
 benchmark selection remains BLOCKED by missing engineering specifications.
@@ -379,7 +382,8 @@ including v1/preflights/record audit; additive finalization overhead is recorded
 separately without rewriting that ledger. These sixteen states remain development/
 qualification data, never independent held-out learned-policy evaluation data.
 This was the pre-counterfactual milestone; the following accepted pilot adds one
-action probe. No learning runs have occurred. [Read-only reproduction and
+action probe. B0 below adds supervised archive-only fits, not policy execution.
+[Read-only reproduction and
 finalization checks](docs/experiment_12_mpc80_reproduction.md).
 
 ### Accepted Counterfactual Pilot B v2
@@ -419,6 +423,44 @@ See the [accepted report](docs/experiment_12_counterfactual_pilot_b_v2_report.md
 [read-only reproduction](docs/experiment_12_counterfactual_reproduction.md).
 The next-direction comparison is a separate proposal awaiting scientific review.
 No new execution, acquisition comparison or learner training is authorized.
+
+### Accepted B0 archive-only learner-gap assessment
+
+B0 used sixteen original MPC80 demonstrations (4,800 labels), excluding the
+4,800 deterministic-repeat labels as independent samples. Fixed trajectory
+partitions were ten training, two validation and four assessment starts. The
+496-input causal/reference-aware MLP had two 64-unit tanh layers and sigmoid
+normalized thrust outputs. Five seeds and nested 2/4/8/10-trajectory subsets used
+the same fixed 5,000-update schedule; no assessment-driven tuning occurred.
+One full training repeat and checkpoint predictions reproduced bitwise.
+
+Assessment MAE was **2.6179%, 1.6129%, 1.5906%, 1.4592% of action range** across
+the four sizes. The primary 4→10 reduction was **9.53%**, below the frozen 25%
+gate; paired reduction **0.369370 mN**, 95% CI **[−0.293477, 0.983669] mN**.
+Ridge at size10 had **2.752139 mN MAE** versus MLP **3.507332 mN**; the MLP error
+was 27.4% higher. The descriptive 2→10 reduction of **44.26%** remains a positive
+low-data finding, not a replacement primary endpoint. The largest-data MLP's
+worst single-action error was **0.148714 N**, emphasizing transient/tail error.
+
+Accept the frozen **NO-GO for new acquisition on current B0 evidence**. A
+meaningful supervised error gap is measured, but the required primary reduction,
+uncertainty and ridge-adequacy gates fail. Approximation, optimization, history
+and data coverage remain competing explanations. No closed-loop return, learned
+tracking performance, state safety or acquisition benefit was measured. All
+original FAILED qualification gates, Pilot B findings, IQL and drilling pauses
+remain unchanged. The four B0 assessment trajectories are now development evidence
+for future design, not untouched evidence for a new primary claim.
+
+Accepted B0 charged **134.306 CPU /210.959 active-wall seconds**, zero MPC calls
+and physics steps. Its completion balance was **1,870 calls /294,000 steps /
+1,665.694 CPU /3,389.041 active-wall seconds**, under cumulative ceilings
+3,964.941 /6,613.063. Additive finalization costs are recorded separately under
+`results/benchmark_selection/b0_finalization/`; no earlier ledger is rewritten
+and unused time is not permission for new fitting or acquisition.
+See [B0 report](docs/experiment_12_b0_report.md),
+[frozen protocol](docs/experiment_12_b0_protocol.md) and
+[read-only reproduction](docs/experiment_12_b0_reproduction.md).
+A learner-adequacy comparison is proposed for separate review only.
 
 ## Experiment 06/IQL remains unfinished
 

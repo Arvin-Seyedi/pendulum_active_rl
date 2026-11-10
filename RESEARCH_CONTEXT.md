@@ -691,14 +691,50 @@ cumulative charges were 2,097.611 /2,893.999 under ceilings 2,189.205 /3,238.108
 Additive finalization costs are recorded separately without altering that snapshot
 or authorizing new experiments. The original 3-of-4 action-diversity and 10%
 practical-headroom criteria remain unestablished. The 16-state archive is development
-data, never independent learned-policy evaluation. Reference-aware imitation may
-test acquisition efficiency without alternative labels, but no fixed learner's
-error/coverage gap or acquisition benefit has yet been measured. Beyond-expert RL
+data, never independent learned-policy evaluation. At that milestone no fixed
+learner's gap or acquisition benefit had been measured; B0 below subsequently
+assessed supervised prediction only. Beyond-expert RL
 still needs safe action/outcome support and demonstrated meaningful headroom.
 See [Pilot B](docs/experiment_12_counterfactual_pilot_b_v2_report.md),
 [reproduction](docs/experiment_12_counterfactual_reproduction.md). The prospective
 direction comparison is design only and awaits review; physical drilling
 development and IQL remain paused.
+
+**Accepted B0 archive-only evidence:** the frozen 496–64–64–2 feed-forward BC
+learner and ridge baseline used only the sixteen original expert demonstrations
+(4,800 labels), with 10/2/4 whole-trajectory training/validation/assessment
+partitions, nested 2/4/8/10 training subsets and five seeds. No new labels,
+physics episodes, controller changes, reward optimization or IQL work occurred.
+The last fixed 5,000-update checkpoint was used; training repeat/optimizer state
+and restored predictions matched bitwise. Assessment stayed locked until all
+fits completed; repeats were not independent data.
+
+Mean assessment action MAE was 2.6179%, 1.6129%, 1.5906%, 1.4592% of action
+range. The primary 4→10 reduction **9.53%** missed the frozen 25% gate; paired
+reduction **0.369370 mN**, 95% CI **[−0.293477, 0.983669] mN** includes zero.
+At size10, MLP MAE **3.507332 mN** exceeded ridge **2.752139 mN** by 27.4%.
+The 2→10 descriptive gain of 44.26% and improved early coverage are retained
+alongside the failed primary decision. A largest-data point error of 0.148714 N
+limits interpretation of small means. Neither acquisition benefit nor autonomous
+tracking/return/state safety was tested. Original qualification failures stand.
+
+Accept the frozen **NO-GO for designing new acquisition on B0 evidence**. The
+error gap is measurable; its explanation is unresolved among representation,
+capacity/optimization, history and coverage. A proposed learner-adequacy design
+must treat B0 assessment IDs as reused development evidence, not pristine data.
+Independent future primary evidence requires new appropriately approved labels
+or genuinely untouched archives; changing only training seeds is insufficient.
+No new training or execution is authorized by finalization or the design review.
+
+B0 consumed **134.306 CPU /210.959 active-wall seconds** from a separately approved
+1,800/3,600-second increment. Accepted cumulative use was 2,299.247/3,224.022,
+with remaining **1,870 MPC calls /294,000 steps /1,665.694 CPU /3,389.041 wall
+seconds** under ceilings 3,964.941/6,613.063. Additive finalization accounting is
+separate and does not rewrite that snapshot or grant a new allocation. Generated
+checkpoints, split manifests, metrics and plots remain outside Git. See the
+[B0 report](docs/experiment_12_b0_report.md),
+[protocol](docs/experiment_12_b0_protocol.md) and
+[read-only reproduction](docs/experiment_12_b0_reproduction.md).
 
 Reports: [04](docs/experiment_04_report.md), [05](docs/experiment_05_report.md),
 [06A](docs/experiment_06a_report.md), [07](docs/experiment_07_report.md),
