@@ -736,6 +736,44 @@ checkpoints, split manifests, metrics and plots remain outside Git. See the
 [protocol](docs/experiment_12_b0_protocol.md) and
 [read-only reproduction](docs/experiment_12_b0_reproduction.md).
 
+**Accepted B1 learner-adequacy evidence:** B1 retained B0's whole-trajectory
+training/validation roles and used the old assessment only as development data.
+Four H0–H3 archival trajectories (1,200 labels) were locked external supervised
+assessment, not globally unseen states. Requested actions match saved solver
+outputs; command history is explicitly reconstructed from recorded RPM, not
+direct execution telemetry. All 4,800 original B0 feature rows match bitwise.
+
+Full496 and compact16 MLPs, five seeds 123000–123004, paired schedules and fixed
+5k/20k checkpoints compared optimization, parameterization and data size. Full
+size10 5k→20k MAE improves **25.94%** (practical gate passed), although external
+MSE rises about 2.48%. Compact versus full size10/20k improves **22.40%**, below
+the fixed 25% threshold; compact size4→10 improves **56.69%**. Nominal adjusted
+98.333% paired normalized-MAE intervals are respectively
+[0.00149565, 0.00684909], [0.00019012, 0.00574909], and
+[0.00673121, 0.01684925], conditional on four external starts and five seeds.
+
+Accept B1's frozen **NO-GO for new expert acquisition**: compact10/20k training
+MAE **0.006064** exceeds 0.005, while external MAE **0.009675** falls below the
+required 0.01 gap. Average external error is **2.326 mN**, worst single action
+**0.2074 N**. A strong data-size contrast alone is insufficient. Representation
+changes also alter capacity/regularization; optimizer/history/coverage effects
+remain unresolved. Neither supervised means nor rare large errors establish
+closed-loop safety or acquisition advantage. B0's 9.53%/NO-GO and all FAILED
+original E12 gates remain unchanged; no threshold or seed was replaced.
+
+B1's accepted cost was **248.278 CPU /321.828 active-wall seconds**, zero MPC
+calls/physics steps, leaving **1,870 calls /294,000 steps /1,356.826 CPU /
+2,963.651 wall seconds** under unchanged shared ceilings 3964.941/6613.063.
+Finalization and subsequent review consume that allowance additively, without
+rewriting B1's ledger. Generated predictions/checkpoints remain outside Git.
+The accepted milestone has 211-test workspace/export verification, 40 independently
+reconstructed checkpoints, four ridge systems and exact prescribed repeat records.
+See [B1 report](docs/experiment_12_b1_report.md),
+[protocol](docs/experiment_12_b1_protocol.md), and
+[read-only finalization](docs/experiment_12_b1_finalization.md).
+Further direction selection requires separate review; no new learner, rollout,
+expert label, acquisition comparison, RL or IQL is authorized by finalization.
+
 Reports: [04](docs/experiment_04_report.md), [05](docs/experiment_05_report.md),
 [06A](docs/experiment_06a_report.md), [07](docs/experiment_07_report.md),
 [08](docs/experiment_08_report.md), [09](docs/experiment_09_report.md),

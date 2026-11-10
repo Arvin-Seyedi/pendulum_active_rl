@@ -14,6 +14,10 @@ return was worse; full action diversity and practical headroom remain unestablis
 The separately reviewed **B0 archive-only learner-gap assessment is complete**:
 a supervised gap exists, but its frozen acquisition-readiness decision is
 **NO-GO**. No learned controller was executed or evaluated for safety/return.
+The separately reviewed **B1 learner-adequacy assessment is complete and accepted**:
+longer full-input training improves external MAE by 25.94%; the compact contrast
+improves 22.40%, below its 25% gate. The compact 4→10 data contrast improves
+56.69%, but the frozen acquisition-readiness decision remains **NO-GO**.
 Experiment 06/IQL remains unfinished: its full ten-seed study was not launched.
 Experiment 11 Gate 0 passed provenance review, but physically bounded-actuator
 benchmark selection remains BLOCKED by missing engineering specifications.
@@ -460,7 +464,48 @@ and unused time is not permission for new fitting or acquisition.
 See [B0 report](docs/experiment_12_b0_report.md),
 [frozen protocol](docs/experiment_12_b0_protocol.md) and
 [read-only reproduction](docs/experiment_12_b0_reproduction.md).
-A learner-adequacy comparison is proposed for separate review only.
+B1 below completes the separately approved learner-adequacy comparison.
+
+### Accepted B1 archive-only learner adequacy
+
+B1 preserves the original training/validation partitions and nested sizes 4/10;
+B0 assessment IDs are development-only. Four independent archival H0–H3 starts
+provide 1,200 external requested-action labels, locked until all prescribed fits
+completed. These states had prior expert/model review and are not globally unseen.
+Their command-history features are source-reconstructed from recorded RPM, not
+direct motor-submission telemetry. All 4,800 B0 feature rows reconstruct bitwise.
+
+Full496 and compact16 MLPs retain tanh64/tanh64/sigmoid2, five fixed seeds
+123000–123004 and paired minibatches. Twenty 20k-update fits retain 5k/20k
+checkpoints; one prescribed repeat and four ridge fits complete the comparison.
+The three external normalized-MAE reductions and nominal adjusted 98.333% CIs are:
+
+- Full size10 5k→20k: **25.94%**, +0.00436717 [0.00149565, 0.00684909];
+  practical optimization gate passes, but external MSE increases about 2.48%.
+- Full→compact size10/20k: **22.40%**, +0.00279267 [0.00019012, 0.00574909];
+  fails the fixed 25% practical criterion.
+- Compact size4→10 at20k: **56.69%**, +0.01266360 [0.00673121, 0.01684925].
+
+Compact10/20k training MAE **0.006064** fails <=0.005; external MAE **0.009675**
+is below the required >=0.01 acquisition gap. Its external error averages
+**2.326 mN**, with worst action error **0.2074 N**. Accept the frozen **NO-GO**
+for new expert acquisition. No learned-policy return, state safety, active-data
+advantage or beyond-expert improvement has been established. Representation,
+capacity/regularization, optimization, transient coverage and omitted expert
+history remain partly confounded. Four external starts limit statistical power;
+no adjacent-transition bootstrap or assessment-driven tuning was used.
+
+B1 consumed **248.278 CPU /321.828 active-wall seconds**, zero MPC calls/steps.
+Its accepted completion balance is **1,870 calls /294,000 steps /1,356.826 CPU /
+2,963.651 wall seconds**, with subsequent finalization charged separately in
+`results/benchmark_selection/b1_finalization/`. Historical ledgers are immutable.
+Workspace and clean export passed 211 tests; independent audits reconstructed
+40 checkpoints, four ridge systems, all adjusted intervals and bitwise repeat
+parameters/Adam moments. See [report](docs/experiment_12_b1_report.md),
+[protocol](docs/experiment_12_b1_protocol.md) and
+[finalization reproduction](docs/experiment_12_b1_finalization.md).
+No new fitting, expert acquisition, policy execution or IQL is authorized by this
+milestone. A subsequent research-direction review is separate from accepted B1.
 
 ## Experiment 06/IQL remains unfinished
 
