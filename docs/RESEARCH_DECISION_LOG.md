@@ -656,3 +656,74 @@ not authorization to start another experiment.
   [read-only reproduction](experiment_12_mpc80_reproduction.md) and
   [clean-export comparison](../results/benchmark_selection/mpc80_feas_finalization/clean_export_comparison.json).
   Implementation milestone: [9848529](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/9848529c4c4cd831af991a7141af4b5cc9eeb892).
+
+## 13 — Accept matched-context Pilot B; keep learning opportunity unestablished
+
+- **Question / previous understanding:** Scoped MPC80 feasibility established
+  complete empirical expert executions on sixteen development states, not safe
+  alternatives at identical contexts. The original overall E12 and 0.001 model
+  agreement gates remained FAILED. Counterfactual preflight found nine of 36
+  labels microscopically input-inadmissible under exact native submission
+  arithmetic; none was repaired or simulated.
+- **Integrity milestones:** The original Pilot B attempt stopped before any
+  scientific execution because the pinned checkout/runtime were incomplete.
+  Exact restoration matched all 289 upstream files, original interpreter/native
+  dependencies and RECORD identities; 154 zero-solve tests passed. A separately
+  documented wiring revision added dispatch, pre-physics command checks and
+  failure recording, with 173 zero-solve tests. Original stopped evidence and
+  the unexecuted, unqualified v1 draft were preserved; neither was resumed or
+  relabeled successful. The older one-solve/one-step instrumentation failure is
+  a separate historical outcome and remains FAILED.
+- **New evidence:** Accepted Pilot B v2 used only ID 0, step zero, nominal menu 4
+  and frozen menu 3. **Four scientific executions and eight replays passed**;
+  all **1,200 native candidates** independently passed corrected v2 KKT checks.
+  Every scientific run checked 6,001 raw states with zero observed state/input
+  violations or contacts and positive causal reserves. Nominal arrays, commands,
+  candidates, previews and warm starts matched archived scientific records
+  bitwise; branch repetitions and both replay types passed. The nominal gate
+  passed before alternative execution. Only the first applied control interval
+  changed; nominal post-query memory and native continuation were preserved.
+- **Positive and negative outcomes:** One distinct alternative has an empirically
+  safe continuation, with actual exact normalized separation
+  **0.05000000000000025**. Its cumulative-return difference was **−0.014157962**
+  (nominal −6.262323368, alternative −6.276481330); discounted return changed
+  **+0.000029110**. Position RMSE and absolute/hover-relative thrust effort
+  increased **0.000529003 m** and **0.000039984/0.000033604 N²s**. All 1,200 native
+  selections exceeded 20 ms. Full 36-label accounting remains: two executed,
+  nine predicted input-inadmissible not run, 25 other admissible labels not run.
+- **Interpretation / limits:** Accept matched-context execution fidelity and one
+  finite-horizon empirical alternative only. This is neither a formal safety
+  guarantee nor evidence of practical reward headroom, population action support,
+  a deployable oracle controller or real-time readiness. The original 3-of-4
+  diversity and 10% headroom criteria remain unestablished; overall qualification
+  and 0.001 model agreement remain FAILED. One alternative does not justify
+  beyond-expert offline RL. Sixteen reviewed qualification states are development
+  data, never independent learned-policy evaluation.
+- **Scientific decision / reason:** Finalize the accepted scoped result and stop
+  execution. Compare full original-menu diversity against reference-aware MPC
+  imitation prospectively. The latter tests selecting informative contexts,
+  rather than obtaining alternative labels, but needs a measured fixed-learner
+  error/coverage gap first. No such learner has yet been evaluated; archive
+  variability and late-trajectory redundancy are descriptive evidence only.
+  A proposed next-direction design requires separate review, training/execution
+  approval and budgets. No new study, acquisition comparison, RL/IQL work or
+  physical drilling development is authorized by this entry.
+- **Verification / resources / references:** Workspace and clean export pass
+  **298 tests** (176 quadrotor, 122 prior; IQL excluded); independent record audits
+  agree in complete scientific JSON, SHA-256
+  `979088d5d69d4ca7c630ba12e0bbca14f4b2ce36745f34d47cfe893aa83cfeff`.
+  They check 12,147 Pilot B artifacts, all 1,200 candidates and replay evidence;
+  historical preservation includes 87,315 accepted MPC80 artifacts, 59,268 prior
+  result/data entries, 87 authority files and nine unchanged untracked IQL files.
+  Finalization uses zero solves/steps and additive time accounting, with no
+  historical ledger edits/refunds. At accepted Pilot B completion the remaining
+  allowance was **1,870 solves /294,000 steps /91.594 CPU /344.109 active-wall
+  seconds**; subsequent finalization consumes time from that allowance rather
+  than renewing it. See [accepted report](experiment_12_counterfactual_pilot_b_v2_report.md),
+  [reproduction](experiment_12_counterfactual_reproduction.md),
+  [preflight](experiment_12_counterfactual_v1_preflight_report.md),
+  [stopped attempt](experiment_12_counterfactual_pilot_B_report.md),
+  [restoration](experiment_12_runtime_restoration_report.md),
+  [wiring review](experiment_12_counterfactual_pilot_b_v2_wiring_report.md) and
+  additive records under `results/benchmark_selection/counterfactual_pilot_B_finalization/`.
+  Implementation milestone: [4f65809](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/4f658095e262c347625066f55d3f6bb2b2e5d1f9).
