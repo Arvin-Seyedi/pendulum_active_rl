@@ -785,3 +785,50 @@ not authorization to start another experiment.
   [read-only reproduction](experiment_12_b0_reproduction.md) and additive
   `results/benchmark_selection/b0_finalization/` evidence.
   Implementation milestone: [d1f4dea](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/d1f4deab55cfa9bb4bbc429da2124e2c9b95022e).
+
+## 15 — Accept B1 learner adequacy and retain acquisition NO-GO
+
+- **Question / previous understanding:** B0 measured a supervised gap, but its
+  9.53% late-stage data reduction, uncertainty and ridge comparison failed the
+  frozen acquisition gate. Representation, optimization, history and coverage
+  were competing explanations; additional acquisition was not justified.
+- **New evidence:** B1 retained nested 4/10 training trajectories, original
+  validation roles and fixed five seeds, with full496/compact16 MLPs and ridge.
+  Twenty fixed 20k-update fits retained 5k/20k checkpoints, plus one repeat.
+  H0–H3 provided four archival external starts, with B0 assessment development-only.
+  Full size10 5k→20k external MAE improved **25.94%**, with normalized reduction
+  **0.00436717**, adjusted 98.333% CI **[0.00149565, 0.00684909]**. Full→compact
+  size10/20k improved **22.40%**, **0.00279267 [0.00019012, 0.00574909]**, below
+  25%. Compact size4→10 improved **56.69%**,
+  **0.01266360 [0.00673121, 0.01684925]**.
+- **Positive / negative findings:** Optimization passes its practical MAE gate,
+  but full size10 external MSE rises about 2.48%. Compact10/20k external MAE is
+  **0.009675**, or **2.326 mN**; its worst action error remains **0.2074 N**.
+  Training MAE **0.006064** fails <=0.005 and external MAE is below the required
+  >=0.01 acquisition gap. Strong data-size sensitivity alone does not pass all
+  gates. No threshold, seed, checkpoint or assessment role was changed afterward.
+- **Interpretation / limitations:** Representation changes also change capacity
+  and regularization. Omitted optimizer/history information, transient coverage
+  and fit/generalization effects remain confounded. H starts were previously
+  expert-reviewed, not globally unseen; their history is source-reconstructed
+  command data, not direct motor telemetry. All 4,800 B0 feature rows reproduce
+  bitwise. Four external trajectories and five seeds limit interval conclusions.
+  No learned-policy rollout, return, state safety or active-acquisition advantage
+  was established. B0's NO-GO and all original FAILED E12 gates remain unchanged.
+- **Scientific decision / reason:** Accept B1 and retain the frozen **NO-GO for
+  new expert-data acquisition**. The prespecified fitting and practical-gap
+  conditions fail; do not tune until they pass or infer a new acquisition benefit.
+  Subsequent research-direction review is separate, without new training,
+  simulations, expert calls, RL/IQL or drilling-model work authorized here.
+- **Verification / resources / references:** Accepted B1 cost **248.278 CPU /
+  321.828 active-wall seconds**, zero MPC solves/physics steps, leaving
+  **1,870 calls /294,000 steps /1,356.826 CPU /2,963.651 wall seconds** before
+  additive finalization. Independent audits reconstruct all 40 checkpoints,
+  four ridge systems, paired intervals, fixed schedules and bitwise repeat
+  parameters/Adam moments/histories. Finalization workspace and clean export pass
+  **216 tests**, preserving prior scientific bytes and nine unfinished IQL files.
+  See [report](experiment_12_b1_report.md), [protocol](experiment_12_b1_protocol.md),
+  [historical design](experiment_12_b1_adequacy_design.md) and
+  [read-only finalization](experiment_12_b1_finalization.md); generated evidence
+  remains outside Git. Implementation milestone:
+  [abeb846](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/abeb846dd5795b2db67c0e8e549956daee9b0de2).
