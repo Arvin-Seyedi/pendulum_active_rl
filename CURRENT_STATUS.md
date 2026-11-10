@@ -8,6 +8,9 @@ Experiment 12's reviewed pilot/diagnostic/qualification milestone is complete;
 requalification passes without changing any historical outcome or threshold.
 The separately reviewed **E12_MPC80_FEAS_v2 scoped expert-feasibility gate PASSED**
 on all sixteen frozen states; it does not supersede either failed benchmark gate.
+The separately reviewed **Counterfactual Pilot B v2 PASSED** matched-context
+execution fidelity and one empirically safe alternative at ID 0. Its cumulative
+return was worse; full action diversity and practical headroom remain unestablished.
 Experiment 06/IQL remains unfinished: its full ten-seed study was not launched.
 Experiment 11 Gate 0 passed provenance review, but physically bounded-actuator
 benchmark selection remains BLOCKED by missing engineering specifications.
@@ -375,9 +378,47 @@ The accepted execution ledger carries 1,501.732 CPU / 1,730.196 active-wall seco
 including v1/preflights/record audit; additive finalization overhead is recorded
 separately without rewriting that ledger. These sixteen states remain development/
 qualification data, never independent held-out learned-policy evaluation data.
-No action probes or learning runs have occurred. A safe-action diversity design
-requires separate execution/budget approval. [Read-only reproduction and
+This was the pre-counterfactual milestone; the following accepted pilot adds one
+action probe. No learning runs have occurred. [Read-only reproduction and
 finalization checks](docs/experiment_12_mpc80_reproduction.md).
+
+### Accepted Counterfactual Pilot B v2
+
+The frozen ID-0/step-zero nominal menu-4 and alternative menu-3 branches each
+completed twice: **4/4 scientific executions, 8/8 replays, 1,200/1,200 independently
+verified candidates**, 300 controls and all 6,001 raw states per scientific run.
+Nominal scientific records, candidate vectors, submitted commands, previews and
+warm starts matched accepted archives bitwise; branch repeats and both replay
+types passed. Only the first 20-ms applied action changed, preserving the nominal
+post-query optimizer memory and unchanged MPC80 continuation.
+
+There were zero observed state/input violations or contacts and strictly positive
+componentwise raw margins and numerical reserves. Alternative direct submitted
+grouped thrust was `[0.056324369506392545, 0.1366413268628003]` N; normalized
+separation was exactly `39363019590861/787260391817216` (0.05000000000000025).
+Direct command submissions are not physical actuator measurements.
+
+Nominal/alternative cumulative returns: **−6.262323368 / −6.276481330**, paired
+difference **−0.014157962**. Discounted-return difference: **+0.000029110**;
+position RMSE increased **0.000529003 m**. Absolute and hover-relative thrust
+effort increased **0.000039984 /0.000033604 N²s**. All **1,200 native selections
+exceeded 20 ms**. The result establishes one empirically safe alternative at one
+context, not meaningful reward improvement, the original 3-of-4 action-diversity
+criterion, formal safety or hard real-time readiness. All 36 original labels
+remain explicit; the nine predicted input-inadmissible labels were not simulated.
+Original overall E12 and 0.001 model-agreement gates remain **FAILED**.
+
+Accepted Pilot B snapshot: cumulative **2,097.611 CPU /2,893.999 active-wall seconds**;
+remaining **1,870 solver calls /294,000 physics steps /91.594 CPU seconds /344.109
+active-wall seconds**, under approved cumulative ceilings 2,189.205 /3,238.108.
+Finalization uses zero solves/steps and charges verification overhead separately
+under `results/benchmark_selection/counterfactual_pilot_B_finalization/`; this
+accepted snapshot is not a renewed time allocation. Historical failed attempts,
+runtime restoration and sealed preflights are unchanged.
+See the [accepted report](docs/experiment_12_counterfactual_pilot_b_v2_report.md),
+[read-only reproduction](docs/experiment_12_counterfactual_reproduction.md).
+The next-direction comparison is a separate proposal awaiting scientific review.
+No new execution, acquisition comparison or learner training is authorized.
 
 ## Experiment 06/IQL remains unfinished
 

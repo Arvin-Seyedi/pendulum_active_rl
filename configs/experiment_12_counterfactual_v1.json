@@ -1,0 +1,157 @@
+{
+  "version": "E12_MPC80_COUNTERFACTUAL_v1",
+  "authorization": "ZERO_SOLVE_PREFLIGHT_AND_PILOT_BUDGET_REVIEW_ONLY",
+  "execution_authorized": false,
+  "parent_version": "E12_MPC80_FEAS_v2",
+  "probe_ids": [
+    0,
+    4,
+    8,
+    12
+  ],
+  "probe_step": 0,
+  "manifest": {
+    "manifest": "results/benchmark_selection/mmaq_v1/screening_manifest.json",
+    "manifest_sha256": "0f13eaf7313623d5c77f8851b090dab147aab3aae95b346307242e04869b9bd9",
+    "array": "results/benchmark_selection/mmaq_v1/screening_states.npy",
+    "array_sha256": "c97f1fed3fcdd17a17de70d61042bef0ce7e0323a2312e38000d1a788fbb4f17",
+    "seed": 120001,
+    "count": 16,
+    "coordinate_order": [
+      "x",
+      "x_dot",
+      "z",
+      "z_dot",
+      "theta",
+      "theta_dot"
+    ],
+    "low": [
+      -1,
+      -0.1,
+      0.5,
+      -0.1,
+      -0.2,
+      -0.1
+    ],
+    "high": [
+      1,
+      0.1,
+      1.5,
+      0.1,
+      0.2,
+      0.1
+    ],
+    "draw_order": "row-major: six consecutive PCG64 uniform draws per state, in physical-state order",
+    "role": "qualification/development; never independent held-out learned-policy evaluation",
+    "replace_or_redraw_states": false
+  },
+  "controller": "nonlinear80",
+  "horizon": 80,
+  "seed": 1337,
+  "task_seconds": 6,
+  "control_frequency": 50,
+  "physics_frequency": 1000,
+  "original_gates": {
+    "overall": "FAILED",
+    "model_agreement_0_001": "FAILED"
+  },
+  "nine_action_menu": {
+    "fractions": [
+      -0.05,
+      0,
+      0.05
+    ],
+    "order": "lexicographic, first channel outermost",
+    "offset_index_zero": 4,
+    "replace_or_shift_actions": false
+  },
+  "full_study_decisions": {
+    "action_support_states_required": 3,
+    "state_denominator": 4,
+    "additional_actions_per_state": 2,
+    "separation_ratio": "1/20",
+    "separation_comparison": "exact rational values of submitted binary64 thrusts; normalized L-infinity; pairwise among credited actions",
+    "mean_cost_reduction": 0.1,
+    "maximum_normalized_margin_loss": 0.01,
+    "per_state_cost_deterioration_cap_as_fraction_comparator_mean": 0.05,
+    "comparator": "strongest tested matched classical baseline; MPC80-only oracle results do not settle that requirement"
+  },
+  "acceptance": {
+    "raw_state_margin_minimum": 0,
+    "negative_margin_tolerance": 0,
+    "contacts_allowed": false,
+    "executed_input_negative_margin_tolerance": 0,
+    "reset_tolerance": 1e-14,
+    "native_status": "Solve_Succeeded",
+    "primal_tolerance": 0.0001,
+    "stationarity_tolerance": 1.01e-08,
+    "dual_sign_tolerance": 1.01e-08,
+    "normalized_complementarity_tolerance": 1.01e-08,
+    "program_reconstruction_tolerance": 1e-10,
+    "source_reconstruction_tolerance": 1e-10,
+    "contract_excess_tolerance": 1e-10,
+    "one_step_reserves_strictly_positive": true,
+    "bitwise_repeats_and_replays_required": true,
+    "fallback_allowed": false
+  },
+  "first_query_parity": "archive state/observation/reference/initial guesses/primal/dual/parameters/action and post-query x/u plan; exact numerical arrays, timings excluded",
+  "initialization": "native factory ordering; controller factory already resets controller; then native plant reset exactly once",
+  "controller_memory": "preserve nominal post-query x_prev/u_prev/prev_action/optimizer state; no in-place mutation of returned action view",
+  "candidate_contract": "candidate-specific request and current raw/cache context; no future states used to construct bound",
+  "classification": [
+    "admissible_not_run",
+    "input_inadmissible",
+    "duplicate",
+    "incomplete_or_unverified",
+    "empirically_safe",
+    "empirically_unsafe"
+  ],
+  "alternative": {
+    "state_id": 0,
+    "menu_index": 3,
+    "selection_rule": "ID 0 first lexicographic nonzero, nonduplicate, source-input-admissible item with exact submitted-thrust separation >=1/20; no future safety/return selection",
+    "substitution": "detached request; one interval only; native MPC continuation retains nominal first-query memory"
+  },
+  "recommended_pilot": "B",
+  "proposed_plans": {
+    "A": {
+      "jobs": 30,
+      "scientific_runs": 10,
+      "replays": 20,
+      "solves": 3000,
+      "physics_steps": 180000,
+      "incremental_CPU_seconds_proposed": 600,
+      "incremental_wall_seconds_proposed": 900
+    },
+    "B": {
+      "jobs": 12,
+      "scientific_runs": 4,
+      "replays": 8,
+      "solves": 1200,
+      "physics_steps": 72000,
+      "incremental_CPU_seconds_proposed": 300,
+      "incremental_wall_seconds_proposed": 600
+    }
+  },
+  "resource_rules": {
+    "original_remaining_solves": 3070,
+    "original_remaining_steps": 366000,
+    "reserve_before_dispatch": true,
+    "refund_failed_reservation": false,
+    "workers": 1,
+    "memory_bytes": 4294967296,
+    "native_action_watchdog_seconds": 1,
+    "report_deadline_seconds": 0.02,
+    "preflight_cumulative_CPU_ceiling": 1800,
+    "preflight_cumulative_wall_ceiling": 3600,
+    "existing_carry_record": "results/benchmark_selection/mpc80_feas_finalization/finalization_resource_accounting.json",
+    "new_execution_time_allocation_approved": false
+  },
+  "pilot_go": "separate execution approval and CPU extension; zero-offset pair and both replays pass before alternative pair; reserve every job; stop on first pilot acceptance/integrity/resource failure; no retries or fallback",
+  "limitations": [
+    "no live trajectory equivalence established",
+    "no complete historical PyBullet checkpoint",
+    "mocked state rows are archived lookups not integrated candidate trajectories",
+    "technical pilot cannot pass 3-of-4 diversity or strongest-baseline headroom criteria"
+  ]
+}

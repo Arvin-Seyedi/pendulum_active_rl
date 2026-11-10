@@ -657,11 +657,48 @@ Remaining original allowance is **3,070 solves / 366,000 physics steps** after v
 not a reset. These sixteen states are qualification/development data. New learned
 policies need fresh independent evaluation with reference phase/preview and relevant
 controller/simulator history represented. Demonstration variability cannot establish
-counterfactual action support. Safe-action diversity is the next design question;
-its execution and any enlarged budget require separate approval. No action probes,
-training or IQL resumption are authorized by this milestone. Physical drilling
+counterfactual action support. At that milestone safe-action diversity remained
+the next design question; the later accepted pilot below supplies one alternative.
+Expanded execution and any enlarged budget require separate approval. Training
+or IQL resumption is not authorized by this milestone. Physical drilling
 work and unfinished IQL remain paused. See the [accepted MPC80 report](docs/experiment_12_mpc80_feas_v2_report.md)
 and [read-only reproduction](docs/experiment_12_mpc80_reproduction.md).
+
+The subsequently accepted **Counterfactual Pilot B v2** used only ID 0/step zero,
+nominal menu 4 and frozen alternative menu 3. Four scientific runs and eight
+replays passed; all 1,200 candidates passed native and independent v2 KKT checks.
+Each scientific run checked 6,001 raw states, with no observed state/input
+violations or contacts and positive causal reserves. Nominal arrays, candidates,
+submitted commands, reference previews and native warm starts reproduced accepted
+archives bitwise. The one-interval detached alternative preserved nominal
+post-query memory; branch repeats and both replay types passed.
+
+Alternative submitted thrust was `[0.056324369506392545, 0.1366413268628003]` N,
+with exact normalized separation 0.05000000000000025. It changed cumulative
+return by **−0.014157962** (nominal −6.262323368, alternative −6.276481330),
+discounted return by **+0.000029110**, position RMSE by **+0.000529003 m**, and
+absolute/hover-relative effort by **+0.000039984/+0.000033604 N²s**. Thus one
+distinct empirically safe continuation is supported, not practical improvement,
+general action support or a population safety claim. All 36 labels remain; nine
+predicted input-inadmissible labels were never simulated. All 1,200 native
+selections exceeded 20 ms. Original FAILED overall/model-agreement outcomes,
+failed instrumentation, stopped runtime attempt and restoration evidence remain
+unchanged. No formal/hardware safety or real-time readiness follows.
+
+At accepted Pilot B completion the remaining allowance was **1,870 solver calls,
+294,000 physics steps, 91.594 CPU seconds and 344.109 active-wall seconds**;
+cumulative charges were 2,097.611 /2,893.999 under ceilings 2,189.205 /3,238.108.
+Additive finalization costs are recorded separately without altering that snapshot
+or authorizing new experiments. The original 3-of-4 action-diversity and 10%
+practical-headroom criteria remain unestablished. The 16-state archive is development
+data, never independent learned-policy evaluation. Reference-aware imitation may
+test acquisition efficiency without alternative labels, but no fixed learner's
+error/coverage gap or acquisition benefit has yet been measured. Beyond-expert RL
+still needs safe action/outcome support and demonstrated meaningful headroom.
+See [Pilot B](docs/experiment_12_counterfactual_pilot_b_v2_report.md),
+[reproduction](docs/experiment_12_counterfactual_reproduction.md). The prospective
+direction comparison is design only and awaits review; physical drilling
+development and IQL remain paused.
 
 Reports: [04](docs/experiment_04_report.md), [05](docs/experiment_05_report.md),
 [06A](docs/experiment_06a_report.md), [07](docs/experiment_07_report.md),
