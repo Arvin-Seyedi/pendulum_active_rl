@@ -727,3 +727,61 @@ not authorization to start another experiment.
   [wiring review](experiment_12_counterfactual_pilot_b_v2_wiring_report.md) and
   additive records under `results/benchmark_selection/counterfactual_pilot_B_finalization/`.
   Implementation milestone: [4f65809](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/4f658095e262c347625066f55d3f6bb2b2e5d1f9).
+
+## 14 — Accept B0's supervised gap evidence and frozen acquisition NO-GO
+
+- **Question / previous understanding:** Pilot B established matched-context
+  execution and one safe alternative, not useful action diversity or reward
+  headroom. Before new expert acquisition, determine whether an existing fixed
+  learner has a measurable supervised error gap that more archived data reduces.
+- **New evidence:** B0 used 4,800 original labels from sixteen MPC80 trajectories;
+  deterministic repeats were not independent data. Whole-trajectory partitions
+  were ten training, two validation and four assessment starts. A frozen
+  496–64–64–2 MLP, five seeds and 2/4/8/10-trajectory nested subsets used identical
+  fixed update budgets. Twenty scientific fits, one deterministic repeat and
+  four prespecified ridge fits completed. Assessment macro MAEs were
+  **2.6179%, 1.6129%, 1.5906%, 1.4592%** of action range. The primary 4→10 error
+  reduction was **9.53%**, below 25%; paired reduction **0.369370 mN**, 95% CI
+  **[−0.293477, 0.983669] mN**, including zero. At size10 MLP MAE was
+  **3.507332 mN** versus ridge **2.752139 mN**: MLP error is 27.4% higher relative
+  to ridge, not a 27.4% reduction with MLP as denominator.
+- **Positive and negative findings:** The descriptive 2→10 reduction was
+  **44.26%**, retaining evidence of a reducible very-low-data component. Early
+  coverage/error improved, but not uniformly across phases/starts. The largest
+  MLP point error remained **0.148714 N**. The required primary reduction,
+  uncertainty and ridge-adequacy gates failed. No thresholds, seeds, features,
+  update counts or endpoints were changed after assessment. A fixed longer
+  schedule or a different representation was not tried as a B0 repair.
+- **Interpretation / limits:** A supervised gap is measured, not autonomous
+  performance or safety. One reference, one nested subset order, four assessment
+  starts and five optimization seeds limit generalization. Teacher-forced previous
+  commands and omitted optimizer/simulator history may matter. Coverage, function
+  approximation and optimization remain competing explanations; ridge's lower
+  error does not alone identify the cause. Action clipping and small average
+  imitation error do not establish state safety or beyond-expert improvement.
+  Original failed benchmark/model-agreement gates remain FAILED.
+- **Scientific decision / reason:** Accept the frozen **NO-GO for designing new
+  acquisition under current B0 evidence**. Review learner adequacy prospectively,
+  without retuning B0 or training anything during the review. Treat B0 assessment
+  IDs as reused development evidence; they cannot become untouched evidence for
+  selecting a new model/direction. Future primary claims need a genuinely locked
+  independent learner-assessment strategy with explicit provenance. No acquisition,
+  policy execution, new expert label, MPC solve, RL/IQL or drilling investigation
+  is authorized by this milestone or the proposed design review.
+- **Verification / resources / references:** Workspace and clean export pass
+  **199 applicable quadrotor tests**, no failures/errors/skips. Independent audits
+  reconstruct all 4,800 feature rows, twenty neural checkpoints, four ridge
+  systems, five-seed schedules, all curve intervals, paired CI and worst actions;
+  the saved training repeat/optimizer moments agree bitwise. Canonical complete
+  assessment SHA-256:
+  `49452bca6e5e849aaee45bd35e0939c89f77338f2440bdc4a49838fdeb93d6a2`.
+  Source/evidence preservation includes all 204 B0 files, prior MPC80/Pilot B,
+  authority and nine unchanged untracked IQL files. B0 consumed **134.306 CPU /
+  210.959 active-wall seconds**, zero solver calls/steps. Its accepted balance
+  was **1,870 calls /294,000 steps /1,665.694 CPU /3,389.041 wall seconds**;
+  finalization adds time charges separately, never rewriting the accepted ledger
+  or granting another allocation. See [report](experiment_12_b0_report.md),
+  [protocol](experiment_12_b0_protocol.md),
+  [read-only reproduction](experiment_12_b0_reproduction.md) and additive
+  `results/benchmark_selection/b0_finalization/` evidence.
+  Implementation milestone: [d1f4dea](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/d1f4deab55cfa9bb4bbc429da2124e2c9b95022e).
