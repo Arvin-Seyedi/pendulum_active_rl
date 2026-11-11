@@ -832,3 +832,45 @@ not authorization to start another experiment.
   [read-only finalization](experiment_12_b1_finalization.md); generated evidence
   remains outside Git. Implementation milestone:
   [abeb846](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/abeb846dd5795b2db67c0e8e549956daee9b0de2).
+
+## 16 — Accept scoped CSTR expert feasibility; retain stock failure
+
+- **Question / previous understanding:** Could a documented nominal CSTR MPC
+  expert provide a reproducible starting point for an equal-budget active
+  imitation study? The do-mpc source audit found a coherent nominal model and
+  highlighted flow/plot-label units, solver history and box-viability limits.
+  The stock controller then failed the strict raw-input gate: C2 requested
+  F=4.999999450093 h^-1, below 5 by 5.499e-7 h^-1, and was stopped before
+  application. C3 and the stock history diagnostics were not run.
+- **New evidence:** A zero-solve diagnosis found correct command extraction and
+  scaling. IPOPT's default bound relaxation strongly explains the stored result;
+  a central-path calculation supports it, while the historical effective-option
+  dump and post-query memory/timing remain unavailable. With the sole revised
+  option `bound_relax_factor=0`, all four fixed cases passed twice, with 16/16
+  replays and 16/16 initialization diagnostics. All 816 candidates passed
+  independent checks. Mean/worst return was −0.085307/−0.157808. Minimum raw
+  F margin was +4.500926991e-7 h^-1, and minimum reconstructed T_R margin
+  +0.008025236 °C; zero raw violations were observed.
+- **Interpretation / limitations:** The revised result is finite-cohort numerical
+  evidence for the nominal simulator. The stock result remains FAILED. The small
+  thermal and input margins provide no physical robustness guarantee; the eight
+  history contexts do not establish six-input sufficiency globally. No learned
+  policy, acquisition benefit, physical reactor safety or beyond-expert action
+  support was established. Pendulum's and quadrotor's prior negative results,
+  the original failed qualification gates and the physical drilling pause remain.
+- **Scientific decision / reason:** Accept the revised expert-only milestone and
+  consider a separately reviewed fixed-learner feasibility design before any
+  targeted-versus-random data collection. Feasible and informative expert queries,
+  reducible learner error and independent closed-loop safety/performance remain
+  prerequisites; this decision authorizes no additional data or training.
+- **Verification / references:** The workspace and clean source export each passed
+  33 zero-solve tests and produced identical independent saved-record audits. The
+  clean export used externally preserved evidence and the pinned runtime, not a
+  standalone generated dataset. Prior scientific artifacts and nine unfinished
+  IQL files were preserved. Revised pilot: 816 solves, 2,400 control intervals,
+  24,000 monitoring checks, 83.358 CPU/150.614 active-wall seconds in its own
+  allocation. See [revised report](cstr_expert_pilot_v2_report.md),
+  [stock report](cstr_expert_pilot_report.md),
+  [diagnosis](cstr_input_bound_diagnosis.md) and
+  [archive-backed reproduction](cstr_reproduction.md). Implementation milestone:
+  [`f0606f8`](https://github.com/Arvin-Seyedi/pendulum_active_rl/commit/f0606f8).
