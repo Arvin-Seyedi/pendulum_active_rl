@@ -10,6 +10,11 @@ The user prefers concise, technically precise research discussion and values sci
 
 The broader area is safe reinforcement learning for nonlinear control.
 
+The current benchmark candidate is the nominal do-mpc CSTR approximation
+example. Its revised expert controller has passed a narrow four-case numerical
+feasibility pilot; a prospective learner-gap study still needs separate approval.
+This simulation benchmark does not establish physically validated reactor safety.
+
 A major prior direction is safe RL via diffeomorphic/state-barrier transformations. The user's earlier work includes safe RL for power-electronics control and later extension toward drilling control.
 
 The current drilling research question has evolved toward:
@@ -899,3 +904,41 @@ numerical properties rather than physical-plant validation or bounded-input
 safety. Experiment 09's certificates apply
 to its declared Pendulum model; they do not transfer to drilling, supply action
 alternatives, justify an offline-RL repair, or certify a future learned policy.
+
+## 15. Nominal CSTR expert feasibility and next research question
+
+The do-mpc v5.1.1 `CSTR_approximate_mpc` source is pinned at
+`90e0d7ada888a4cc75ea3769214de5105764c640`. Its state is
+`(C_a,C_b,T_R,T_K)` and input `(F,Q_dot)`; F is a dilution rate in h^-1,
+Q is kJ/h, and temperatures are °C. Plot labels in the example are not a
+reliable physical-units contract. Its nominal objective and hard optimizer
+constraints are distinct from the standard robust/soft-constraint example.
+
+The original stock numerical controller failed its strict input gate on C2:
+its requested F=4.999999450093 h^-1 was below 5 by 5.499e-7 h^-1 and was not
+applied. IPOPT's default bound relaxation and native scaling strongly explain
+the observation; the retained evidence does not provide an effective-option dump
+for that historical call. Preserve the [failed pilot](docs/cstr_expert_pilot_report.md)
+and [diagnosis](docs/cstr_input_bound_diagnosis.md) as separate negative findings.
+
+The approved v2 controller changes only `bound_relax_factor=0`. The exact original
+four starts completed twice with native and independent replays and 16 matched
+warm/cold initialization diagnostics: 816/816 candidates passed independent
+checks, with zero observed raw state/input violations. Mean/worst return was
+−0.085307/−0.157808. The minimum raw F lower margin was +4.500926991e-7 h^-1
+and the smallest reconstructed T_R margin was +0.008025236 °C. All repetitions
+and recorded-action replays were deterministic under the recorded comparison.
+Read-only effective-option inspection used the pinned CasADi/IPOPT ABI, and the
+original/revised mathematical graphs and bounds matched. See the
+[v2 report](docs/cstr_expert_pilot_v2_report.md),
+[protocol](docs/cstr_expert_pilot_v2_protocol.md), and
+[archive-backed reproduction](docs/cstr_reproduction.md).
+
+These four nominal cases are empirical finite-cohort evidence only. They do not
+prove robust/continuous-time or physical-plant safety, viability of the whole
+state box, or six-input policy sufficiency. The eight matched decision contexts
+are too few to exclude solver-history effects elsewhere. Disturbances, sensor
+error, actuators, learner rollouts, acquisition gains and beyond-expert action
+support remain untested. Additional expert data, learners, acquisition or RL
+require a separately approved design and resource allocation. The original
+Pendulum and quadrotor limitations, drilling pause and unfinished IQL work remain.

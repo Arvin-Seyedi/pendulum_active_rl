@@ -18,6 +18,12 @@ The separately reviewed **B1 learner-adequacy assessment is complete and accepte
 longer full-input training improves external MAE by 25.94%; the compact contrast
 improves 22.40%, below its 25% gate. The compact 4→10 data contrast improves
 56.69%, but the frozen acquisition-readiness decision remains **NO-GO**.
+The nominal do-mpc CSTR is the selected candidate for a separate learning-
+opportunity assessment. Its stock-controller technical pilot **FAILED** the
+strict raw-input gate; the separately versioned controller with IPOPT
+`bound_relax_factor=0` **PASSED** its four-case finite-cohort technical pilot.
+This does not establish safe learning, physical reactor safety, or acquisition
+benefit. The proposed learner study requires separate scientific approval.
 Experiment 06/IQL remains unfinished: its full ten-seed study was not launched.
 Experiment 11 Gate 0 passed provenance review, but physically bounded-actuator
 benchmark selection remains BLOCKED by missing engineering specifications.
@@ -69,11 +75,42 @@ and whether an initial state admits any safe control sequence.
 | 11B: static reference audit | Exact-rational and 128/256-bit interval checks confirm both reference identities fail for the archived model. Omitted forcing is approximately −0.152400579 rad/s² at 20 s; it is an equation discrepancy, not trajectory drift. Physical constrained reduction remains unresolved. | [Report](docs/experiment_11b_report.md); [reproduction](docs/experiment_11b_reproduction.md) |
 | 11C: constraint/reference pilot | Four snapshots and all five operator groups reject unreacted full-force compatibility. Ideal-reaction, virtual-work and block equations agree conditionally, with nonzero retained reaction effects. The affine reference fails under both formulations; physical applicability remains unresolved. | [Report](docs/experiment_11c_report.md); [reproduction](docs/experiment_11c_reproduction.md) |
 | 12: quadrotor numerical qualification | Native linear dispatch and original 0.001 symbolic/plant agreement fail. Adapted linear pilot succeeds, but held-out QRQP failures remain. NMPC40/80 complete all four held-out cases safely; new H2/MPC20 v2 runs complete twice and pass corrected KKT checks. Overall qualification remains failed. | [Consolidated report](docs/experiment_12_report.md); [finalization reproduction](docs/experiment_12_finalization.md) |
+| CSTR expert feasibility | The stock pilot failed before C2's first command was applied. With the only solver-option change `bound_relax_factor=0`, all four fixed cases, eight executions, 16 replays and 16 history diagnostics passed; all 816 candidates verified. Mean/worst return −0.085307/−0.157808; smallest dense T_R margin +0.008025236 °C. | [Revised report](docs/cstr_expert_pilot_v2_report.md), [stock report](docs/cstr_expert_pilot_report.md), [reproduction](docs/cstr_reproduction.md) |
 
 Experiment 04 uses paired seeds 42–51; Experiment 05 uses 52–61. Reported intervals
 are seed-bootstrap intervals conditional on each study's fixed evaluation set.
 Zero-inclusive intervals do not establish equivalence. Both studies retain all
 seeds, negative findings, and separate return/safety outcomes.
+
+## CSTR finite-cohort expert feasibility
+
+The selected nominal `CSTR_approximate_mpc` is pinned to do-mpc v5.1.1 commit
+`90e0d7ada888a4cc75ea3769214de5105764c640`. The source audit treats F as a
+dilution rate in h^-1, Q as kJ/h, and temperatures as °C; the plotting labels
+must not be treated as authoritative units. The published nominal objective,
+model, bounds, scaling, 20-step Radau horizon, 0.005-hour sampling and native
+warm starts are preserved. IPOPT's original bound relaxation strongly explains the
+stock pilot's C2 request F=4.999999450093 h^-1, which was rejected before
+application; the original failure and incomplete telemetry remain unchanged.
+
+The revised `bound_relax_factor=0` controller passed all four fixed cases with
+8/8 scientific executions, 16/16 native/independent replays and 16/16 matched
+initialization diagnostics. All 816 saved candidates passed independently
+reconstructed numerical checks; zero raw state/input violations were observed.
+The minimum F lower margin was +4.500926991e-7 h^-1. The maximum normalized
+warm/cold action difference was 1.291370585e-8 across eight contexts; these
+contexts do not prove global sufficiency of physical state plus previous input.
+Minimum dense reactor-temperature margin was only 0.008025236 °C. Numerical
+replay checks do not certify continuous-time, robust or physical-plant safety.
+No CSTR learner, acquisition comparison or beyond-expert policy was evaluated.
+
+Revised-pilot charges were 816 solves, 2,400 control intervals, 24,000 monitoring
+checks and 83.358 CPU/150.614 active-wall seconds, under its separate allocation.
+Generated evidence remains outside Git. Its 600-second/1,200-second ceiling and
+the separate historical E12 ledger are not renewed permissions for new research.
+The [source and runtime lock](configs/cstr_reproducibility_lock.json) records
+the pinned identities; archived evidence and the pinned ABI remain external
+requirements for the [read-only reproduction](docs/cstr_reproduction.md).
 
 ## Experiment 08 model and scope
 

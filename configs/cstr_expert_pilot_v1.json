@@ -1,0 +1,129 @@
+{
+  "version": "CSTR_EXPERT_TECHNICAL_v1",
+  "upstream_commit": "90e0d7ada888a4cc75ea3769214de5105764c640",
+  "upstream": "/private/tmp/cstr_do_mpc_90e0d7a",
+  "python": "/private/tmp/cstr_audit_venv_90e0d7a/bin/python",
+  "audit_root": "results/cstr_source_audit/zero_solve_v1",
+  "audit_completion_sha256": "be8b434a9c363acb5fef72edb43155d4caf9e10bbf60ff7ae15cbb1afe9b2aee",
+  "pilot_manifest_sha256": "ecc4fe449c0fff2f04480c0ab3713536181b5c1eb94fc6212fd1803a667acc03",
+  "numerical_contract_sha256": "7a226e74e2b60d78eb1f1f5e3696fc856da7ff2e3aec81815d90568cd125d054",
+  "state_order": [
+    "C_a",
+    "C_b",
+    "T_R",
+    "T_K"
+  ],
+  "input_order": [
+    "F",
+    "Q_dot"
+  ],
+  "cases": [
+    {
+      "id": "C0",
+      "values": [
+        0.8,
+        0.5,
+        134.14,
+        130.0
+      ],
+      "binary64_hex": [
+        "0x1.999999999999ap-1",
+        "0x1.0000000000000p-1",
+        "0x1.0c47ae147ae14p+7",
+        "0x1.0400000000000p+7"
+      ],
+      "little_endian_bytes_hex": "9a9999999999e93f000000000000e03f14ae47e17ac460400000000000406040"
+    },
+    {
+      "id": "C1",
+      "values": [
+        0.6,
+        0.4,
+        130.0,
+        125.0
+      ],
+      "binary64_hex": [
+        "0x1.3333333333333p-1",
+        "0x1.999999999999ap-2",
+        "0x1.0400000000000p+7",
+        "0x1.f400000000000p+6"
+      ],
+      "little_endian_bytes_hex": "333333333333e33f9a9999999999d93f00000000004060400000000000405f40"
+    },
+    {
+      "id": "C2",
+      "values": [
+        1.0,
+        0.7,
+        136.0,
+        135.0
+      ],
+      "binary64_hex": [
+        "0x1.0000000000000p+0",
+        "0x1.6666666666666p-1",
+        "0x1.1000000000000p+7",
+        "0x1.0e00000000000p+7"
+      ],
+      "little_endian_bytes_hex": "000000000000f03f666666666666e63f00000000000061400000000000e06040"
+    },
+    {
+      "id": "C3",
+      "values": [
+        0.8,
+        0.5,
+        138.0,
+        134.0
+      ],
+      "binary64_hex": [
+        "0x1.999999999999ap-1",
+        "0x1.0000000000000p-1",
+        "0x1.1400000000000p+7",
+        "0x1.0c00000000000p+7"
+      ],
+      "little_endian_bytes_hex": "9a9999999999e93f000000000000e03f00000000004061400000000000c06040"
+    }
+  ],
+  "previous_input": [
+    5.0,
+    0.0
+  ],
+  "dt": 0.005,
+  "transitions": 100,
+  "phases": [
+    "original",
+    "repeat"
+  ],
+  "silence_solver": true,
+  "primary_monitor_intervals": 10,
+  "refined_monitor_intervals": 20,
+  "independent_rtol": 1e-11,
+  "independent_atol": 1e-11,
+  "normalized_replay_tolerance": 1e-07,
+  "normalized_reserve": 2e-07,
+  "primal_tolerance": 1e-07,
+  "stationarity_tolerance": 1e-06,
+  "complementarity_tolerance": 1e-06,
+  "dual_sign_tolerance": 1e-06,
+  "graph_tolerance": 1e-10,
+  "objective_tolerance": 1e-10,
+  "status_required": "Solve_Succeeded",
+  "memory_bytes": 4294967296,
+  "budget": {
+    "solves": 816,
+    "intervals": 2400,
+    "monitors": 24000,
+    "cpu_seconds": 600.0,
+    "wall_seconds": 1200.0
+  },
+  "context_steps": [
+    0,
+    1
+  ],
+  "context_initializations": [
+    "native_prequery_primal_duals",
+    "constant_x_previous_u_zero_duals"
+  ],
+  "diagnostic_interpretation": "native-history branch must reproduce source candidate bitwise; cold-initialization differences are reported, not automatically called six-input sufficiency or selected for performance",
+  "execution_order": "each case: original scientific/native replay/independent replay; repeat scientific/native replay/independent replay; after all four, context diagnostics in case/step/initialization order",
+  "monitor_accounting": "Native scientific/replay record control boundaries only. Each independent replay interval evaluates primary10 plus refined20 subintervals (30 charged, 20 unique); shared samples are not independent data. Max800 independent intervals gives24000 checks."
+}
